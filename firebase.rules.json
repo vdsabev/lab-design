@@ -1,0 +1,54 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    // Reports
+    "reports": {
+      "$report": {
+        ".read": true,
+
+        "date": { ".validate": "newData.isNumber()" },
+        "description": { ".validate": "newData.isString()" },
+        "tests": {
+          "$test": {
+            "value": { ".validate": "newData.isNumber()" }
+          }
+        },
+
+        "$other": { ".validate": false }
+      }
+    },
+
+    // Tests
+    "tests": {
+      "$test": {
+        ".read": true,
+
+        "name": { ".validate": "newData.isString()" },
+        "unit": { ".validate": "newData.isString()" },
+        "minValue": { ".validate": "newData.isNumber()" },
+        "maxValue": { ".validate": "newData.isNumber()" },
+
+        "$other": { ".validate": false }
+      }
+    },
+
+    // Users
+    "users": {
+      "$user": {
+        ".read": true,
+
+        "name": { ".validate": "newData.isString()" },
+        "pictureUrl": { ".validate": "newData.isString()" },
+        "reports": {
+          "$report": { ".validate": "newData.isBoolean()" }
+        },
+
+        "$other": { ".validate": false }
+      }
+    },
+
+    "$other": { ".validate": false }
+  }
+}

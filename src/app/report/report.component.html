@@ -1,0 +1,26 @@
+<div class="spinner-view" *ngIf="loading">
+  <div class="spinner"></div>
+</div>
+
+<div class="report" *ngIf="!loading">
+  <div class="report-section">
+    <table>
+      <tr *ngFor="let test of report.tests | toArray">
+        <td class="cell">{{test.name}}</td>
+        <td class="cell">
+          {{test.unit}}
+        </td>
+        <td class="cell values">
+          <!-- TODO: Handle values outside min / max -->
+          <div class="flex-row justify-content-start align-items-center">
+            <div class="bar min-value">{{test.minValue | number:'1.2-2'}}</div>
+            <div class="bar" [appFlex]="100 * (test.value - test.minValue)"></div>
+            <div class="bar value">{{test.value | number:'1.2-2'}}</div>
+            <div class="bar" [appFlex]="100 * (test.maxValue - test.value)"></div>
+            <div class="bar max-value">{{test.maxValue | number:'1.2-2'}}</div>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

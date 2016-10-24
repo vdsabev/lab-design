@@ -1,0 +1,33 @@
+@import '../../styles/variables';
+
+.report-section {
+  margin: 0 auto;
+  padding: 30px;
+  width: 100%;
+  max-width: 768px;
+}
+
+.cell {
+  padding: 0.2em 0.4em;
+
+  &.values {
+    width: 100%;
+  }
+}
+
+.bar {
+  background: $neutral-dark;
+  padding: 0.2em 0.4em;
+  min-height: 1em;
+
+  &.value {
+    background: $success;
+    color: $neutral-light;
+  }
+
+  &.min-value,
+  &.max-value {
+    background: $neutral-darker;
+    color: $neutral-light;
+  }
+}

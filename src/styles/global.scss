@@ -1,0 +1,43 @@
+// Full-height content
+html,
+body {
+  height: 100%;
+}
+
+body {
+  line-height: 24px;
+  color: $foreground;
+  font-family: $font-family;
+}
+
+input[type="text"],
+button {
+  height: 35px;
+}
+
+input[type="text"] {
+  padding: 2px 5px;
+}
+
+button {
+  border-radius: 3px;
+  background: $neutral-light;
+  padding: 4px 8px;
+  text-transform: uppercase;
+}
+
+h1 { font-size: $h1-font-size; }
+h2 { font-size: $h2-font-size; }
+h3 { font-size: $h3-font-size; }
+h4 { font-size: $h4-font-size; }
+h5 { font-size: $h5-font-size; }
+h6 { font-size: $h6-font-size; }
+
+table {
+  page-break-inside: auto;
+}
+
+tr {
+  page-break-inside: avoid;
+  page-break-after: auto;
+}

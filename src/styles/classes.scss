@@ -1,0 +1,97 @@
+// Flexbox
+// https://css-tricks.com/using-flexbox/
+// display
+.flex {
+  @include flex();
+}
+
+// flex-direction
+.flex-row {
+  @include flex();
+  @include flex-direction(row);
+}
+
+.flex-row-reverse {
+  @include flex();
+  @include flex-direction(row-reverse);
+}
+
+.flex-column {
+  @include flex();
+  @include flex-direction(column);
+}
+
+.flex-column-reverse {
+  @include flex();
+  @include flex-direction(column-reverse);
+}
+
+// flex-wrap
+.flex-nowrap { @include flex-wrap(nowrap); }
+.flex-wrap { @include flex-wrap(wrap); }
+.flex-wrap-reverse { @include flex-wrap(wrap-reverse); }
+
+// justify-content
+.justify-content-start { @include justify-content(flex-start); }
+.justify-content-end { @include justify-content(flex-end); }
+.justify-content-center { @include justify-content(center); }
+.justify-content-space-between { @include justify-content(space-between); }
+.justify-content-space-around { @include justify-content(space-around); }
+
+// align-items
+.align-items-start { @include align-items(flex-start); }
+.align-items-end { @include align-items(flex-end); }
+.align-items-center { @include align-items(center); }
+.align-items-stretch { @include align-items(stretch); }
+.align-items-baseline { @include align-items(baseline); }
+
+// align-self
+.align-self-start { @include align-self(flex-start); }
+.align-self-end { @include align-self(flex-end); }
+.align-self-center { @include align-self(center); }
+.align-self-stretch { @include align-self(stretch); }
+.align-self-baseline { @include align-self(baseline); }
+
+// Responsive classes
+.flex-row-xs {
+  @include flex-direction(row);
+  margin: 0 (-$flex-item-spacing);
+
+  > .flex-item {
+    padding: 0 $flex-item-spacing;
+  }
+}
+
+@mixin flex-row-responsive($size) {
+  @media (min-width: $size) {
+    @include flex-direction(row);
+    margin: 0 (-$flex-item-spacing);
+
+    > .flex-item {
+      padding: 0 $flex-item-spacing;
+    }
+  }
+}
+
+.flex-row-sm,
+.flex-row-md,
+.flex-row-lg {
+  @include flex-direction(column);
+  margin: -$flex-item-spacing 0;
+
+  > .flex-item {
+    padding: $flex-item-spacing 0;
+  }
+}
+
+.flex-row-sm {
+  @include flex-row-responsive($sm-min);
+}
+
+.flex-row-md {
+  @include flex-row-responsive($md-min);
+}
+
+.flex-row-lg {
+  @include flex-row-responsive($lg-min);
+}
