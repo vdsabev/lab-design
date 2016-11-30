@@ -7,17 +7,38 @@
     <table>
       <tr *ngFor="let test of report.tests | toArray">
         <td class="cell">{{test.name}}</td>
-        <td class="cell">
-          {{test.unit}}
-        </td>
+        <td class="cell">{{test.unit}}</td>
         <td class="cell values">
           <!-- TODO: Handle values outside min / max -->
           <div class="flex-row justify-content-start align-items-center">
-            <div class="bar min-value">{{test.minValue | number:'1.2-2'}}</div>
-            <div class="bar" [appFlex]="100 * (test.value - test.minValue)"></div>
-            <div class="bar value">{{test.value | number:'1.2-2'}}</div>
-            <div class="bar" [appFlex]="100 * (test.maxValue - test.value)"></div>
-            <div class="bar max-value">{{test.maxValue | number:'1.2-2'}}</div>
+            <div
+              class="bar"
+              [class.min-value]="getMinValue(test) === test.minValue"
+              [class.low-value]="getMinValue(test) === test.value"
+            >
+              {{getMinValue(test) | number:'1.2-2'}}
+            </div>
+
+            <div class="bar" [appFlex]="100 * Math.abs(test.value - test.minValue)"></div>
+
+            <div
+              class="bar"
+              [class.min-value]="getValue(test) === test.minValue"
+              [class.max-value]="getValue(test) === test.maxValue"
+              [class.value]="getValue(test) === test.value"
+            >
+              {{getValue(test) | number:'1.2-2'}}
+            </div>
+
+            <div class="bar" [appFlex]="100 * Math.abs(test.maxValue - test.value)"></div>
+
+            <div
+              class="bar"
+              [class.max-value]="getMaxValue(test) === test.maxValue"
+              [class.high-value]="getMaxValue(test) === test.value"
+            >
+              {{getMaxValue(test) | number:'1.2-2'}}
+            </div>
           </div>
         </td>
       </tr>

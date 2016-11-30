@@ -25,6 +25,12 @@
     color: $neutral-light;
   }
 
+  &.low-value,
+  &.high-value {
+    background: $danger;
+    color: $neutral-light;
+  }
+
   &.min-value,
   &.max-value {
     background: $neutral-darker;

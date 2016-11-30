@@ -51,4 +51,23 @@ export class ReportComponent implements OnInit {
       });
     });
   }
+
+  getSortedValues(test: Test): number[] {
+    const values = [test.minValue, test.value, test.maxValue];
+    values.sort((a, b) => a - b);
+
+    return values;
+  }
+
+  getMinValue(test: Test): number {
+    return this.getSortedValues(test)[0];
+  }
+
+  getValue(test: Test): number {
+    return this.getSortedValues(test)[1];
+  }
+
+  getMaxValue(test: Test): number {
+    return this.getSortedValues(test)[2];
+  }
 }
