@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import * as _ from 'underscore';
 
 @Component({
@@ -14,12 +14,13 @@ export class ReportComponent implements OnInit {
 
   constructor(
     private changeDetector: ChangeDetectorRef,
+    private router: Router,
     private route: ActivatedRoute
   ) {
   }
 
   ngOnInit() {
-    this.route.params.forEach((params: Params) => this.loadReport(params['id']));
+    this.route.params.forEach((params) => this.loadReport(params['id']));
   }
 
   loadReport(reportId: string) {
@@ -29,6 +30,11 @@ export class ReportComponent implements OnInit {
     reportRef.off('value');
     reportRef.on('value', (reportSnapshot: { val: () => Report }) => {
       this.report = reportSnapshot.val();
+      if (!this.report) {
+        this.router.navigate(['reports']);
+        window.alert(`Report '${reportId}' not found!`);
+      }
+
       const tests = this.report.tests;
       this.report.tests = {};
 
