@@ -4,21 +4,55 @@
   margin: 0 auto;
   padding: 30px;
   width: 100%;
-  max-width: 768px;
+  max-width: $md-min;
 }
 
 .cell {
-  padding: 0.2em 0.4em;
+  padding: 0.5em;
+
+  &.name {
+    white-space: nowrap;
+  }
 
   &.values {
+    position: relative;
     width: 100%;
   }
 }
 
+.bar-container {
+  position: relative;
+  width: 100%;
+  height: 1em;
+}
+
 .bar {
-  background: $neutral-dark;
-  padding: 0.2em 0.4em;
   min-height: 1em;
+
+  &.background {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: $neutral-dark;
+  }
+
+  &.min-value,
+  &.max-value,
+  &.value {
+    position: absolute;
+    top: -0.5em;
+    bottom: -0.5em;
+    border-radius: 3px;
+    width: 0.5em;
+  }
+
+  &.min-value,
+  &.max-value {
+    background: $neutral-darker;
+    color: $neutral-light;
+  }
 
   &.value {
     background: $success;
@@ -28,12 +62,6 @@
   &.low-value,
   &.high-value {
     background: $danger;
-    color: $neutral-light;
-  }
-
-  &.min-value,
-  &.max-value {
-    background: $neutral-darker;
     color: $neutral-light;
   }
 }

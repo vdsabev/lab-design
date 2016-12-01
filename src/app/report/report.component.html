@@ -6,38 +6,27 @@
   <div class="report-section">
     <table>
       <tr *ngFor="let test of report.tests | toArray">
-        <td class="cell">{{test.name}}</td>
+        <td class="cell name">{{test.name}}</td>
         <td class="cell">{{test.unit}}</td>
         <td class="cell values">
-          <!-- TODO: Handle values outside min / max -->
-          <div class="flex-row justify-content-start align-items-center">
-            <div
-              class="bar"
-              [class.min-value]="getMinValue(test) === test.minValue"
-              [class.low-value]="getMinValue(test) === test.value"
-            >
-              {{getMinValue(test) | number:'1.2-2'}}
+          <div class="bar-container">
+            <!-- TODO: Show numeric values -->
+            <div class="bar background"></div>
+            <div class="bar min-value" [style.left]="maxLowPercent + '%'">
+              <!-- {{test.minValue | number:'1.2-2'}} -->
             </div>
 
-            <div class="bar" [appFlex]="100 * Math.abs(test.value - test.minValue)"></div>
-
-            <div
-              class="bar"
-              [class.min-value]="getValue(test) === test.minValue"
-              [class.max-value]="getValue(test) === test.maxValue"
-              [class.value]="getValue(test) === test.value"
-            >
-              {{getValue(test) | number:'1.2-2'}}
+            <div class="bar max-value" [style.left]="(100 - maxHighPercent) + '%'">
+              <!-- {{test.maxValue | number:'1.2-2'}} -->
             </div>
 
-            <div class="bar" [appFlex]="100 * Math.abs(test.maxValue - test.value)"></div>
-
             <div
-              class="bar"
-              [class.max-value]="getMaxValue(test) === test.maxValue"
-              [class.high-value]="getMaxValue(test) === test.value"
+              class="bar value"
+              [class.low-value]="test.value < test.minValue"
+              [class.high-value]="test.value > test.maxValue"
+              [style.left]="getValuePercent(test) + '%'"
             >
-              {{getMaxValue(test) | number:'1.2-2'}}
+              <!-- {{test.value | number:'1.2-2'}} -->
             </div>
           </div>
         </td>
