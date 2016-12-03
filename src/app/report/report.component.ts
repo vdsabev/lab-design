@@ -12,8 +12,8 @@ export class ReportComponent implements OnInit {
   Math = Math;
   report: Report;
 
-  maxLowPercent = 0;
-  maxHighPercent = 0;
+  lowestValueCoefficient = 0;
+  highestValueCoefficient = 0;
 
   constructor(
     private changeDetector: ChangeDetectorRef,
@@ -50,7 +50,7 @@ export class ReportComponent implements OnInit {
           // TODO: Fix report disappearing when a test value is updated
           stopLoading();
           const reportTest = this.report.tests[testId] = _.extend(testSnapshot.val(), test);
-          this.updateLowAndHighPercents(reportTest);
+          this.updateCoefficients(reportTest);
 
           this.changeDetector.detectChanges();
         });
@@ -58,39 +58,28 @@ export class ReportComponent implements OnInit {
     });
   }
 
-  updateLowAndHighPercents(test: Test) {
+  updateCoefficients(test: Test) {
     const valueRange = test.maxValue - test.minValue;
 
     if (test.value < test.minValue) {
-      const lowPercent = 100 * (test.minValue - test.value) / valueRange;
-      if (lowPercent > this.maxLowPercent) {
-        this.maxLowPercent = lowPercent;
+      const lowCoefficient = (test.minValue - test.value) / valueRange;
+      if (lowCoefficient > this.lowestValueCoefficient) {
+        this.lowestValueCoefficient = lowCoefficient;
       }
     }
 
     if (test.value > test.maxValue) {
-      const highPercent = 100 * (test.value - test.maxValue) / valueRange;
-      if (highPercent > this.maxHighPercent) {
-        this.maxHighPercent = highPercent;
+      const highCoefficient = (test.value - test.maxValue) / valueRange;
+      if (highCoefficient > this.highestValueCoefficient) {
+        this.highestValueCoefficient = highCoefficient;
       }
     }
   }
 
-
-  /**
-   * maxLowPercent = 10
-   * maxHighPercent = 5
-   * ----------|---5-----------------------------------------------------------------------------------------95---|-----
-   *               ^ 100 * (10 + 5) / (100 + 10 + 5)                                                         ^ 100 * (10 + 95) / (100 + 10 + 5)
-   * ----------0--------------------------------------------------------------------------------------------------100---
-   *           ^ 100 * (10 + 0) / (100 + 10 + 5)                                                                  ^ 100 * (10 + 100) / (100 + 10 + 5)
-   * ----5-----|--------------------------------------------------------------------------------------------------|101--
-   *     ^ 100 * (10 - 5) / (100 + 10 + 5)                                                                         ^ 100 * (10 + 101) / (100 + 10 + 5)
-   * 10--------|--------------------------------------------------------------------------------------------------|--105
-   * ^ 100 * (10 - 10) / (100 + 10 + 5)                                                                              ^ 100 * (10 + 105) / (100 + 10 + 5)
-   */
-  getValuePercent(test: Test): number {
-    const valuePercent = 100 * (test.value - test.minValue) / (test.maxValue - test.minValue);
-    return 100 * (valuePercent + this.maxLowPercent) / (100 + this.maxLowPercent + this.maxHighPercent);
+  getValuePosition(value: number, test: Test): number {
+    const valueRange = test.maxValue - test.minValue;
+    const maxLowValue = test.minValue - valueRange * this.lowestValueCoefficient;
+    const maxHighValue = test.maxValue + valueRange * this.highestValueCoefficient;
+    return 100 * (value - maxLowValue) / (maxHighValue - maxLowValue);
   }
 }
