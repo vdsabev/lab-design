@@ -4,11 +4,11 @@
   margin: 0 auto;
   padding: 30px;
   width: 100%;
-  max-width: $md-min;
+  max-width: $lg-min;
 }
 
 .cell {
-  padding: 0.5em;
+  padding: 20px 10px;
 
   &.name {
     white-space: nowrap;
@@ -23,12 +23,10 @@
 .bar-container {
   position: relative;
   width: 100%;
-  height: 1em;
+  height: 10px;
 }
 
 .bar {
-  min-height: 1em;
-
   &.background {
     position: absolute;
     top: 0;
@@ -42,10 +40,9 @@
   &.max-value,
   &.value {
     position: absolute;
-    top: -0.5em;
-    bottom: -0.5em;
-    border-radius: 3px;
-    width: 0.5em;
+    top: -15px;
+    bottom: -15px;
+    width: 5px;
   }
 
   &.min-value,
@@ -63,5 +60,11 @@
   &.high-value {
     background: $danger;
     color: $neutral-light;
+  }
+
+  .value-number {
+    border-radius: 3px;
+    background: inherit;
+    padding: 0 5px;
   }
 }

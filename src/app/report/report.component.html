@@ -10,23 +10,22 @@
         <td class="cell">{{test.unit}}</td>
         <td class="cell values">
           <div class="bar-container">
-            <!-- TODO: Show numeric values -->
             <div class="bar background"></div>
-            <div class="bar min-value" [style.left]="maxLowPercent + '%'">
-              <!-- {{test.minValue | number:'1.2-2'}} -->
+            <div class="bar min-value flex-row justify-content-center align-items-center" [style.left]="maxLowPercent + '%'">
+              <div class="value-number">{{test.minValue | number:'1.2-2'}}</div>
             </div>
 
-            <div class="bar max-value" [style.left]="(100 - maxHighPercent) + '%'">
-              <!-- {{test.maxValue | number:'1.2-2'}} -->
+            <div class="bar max-value flex-row justify-content-center align-items-center" [style.left]="(100 - maxHighPercent) + '%'">
+              <div class="value-number">{{test.maxValue | number:'1.2-2'}}</div>
             </div>
 
             <div
-              class="bar value"
+              class="bar value flex-row justify-content-center align-items-center"
               [class.low-value]="test.value < test.minValue"
               [class.high-value]="test.value > test.maxValue"
               [style.left]="getValuePercent(test) + '%'"
             >
-              <!-- {{test.value | number:'1.2-2'}} -->
+              <div class="value-number">{{test.value | number:'1.2-2'}}</div>
             </div>
           </div>
         </td>
