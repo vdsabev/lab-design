@@ -1,13 +1,18 @@
 import './style.scss';
 
-import { div, h1, h4 } from 'compote/html';
+import { div, h1 } from 'compote/html';
 import { Timeago } from 'compote/components/timeago';
+import { classy } from 'compote/components/utils';
 import { FactoryComponent, redraw } from 'mithril';
 
 import { Report } from '../report';
 import { Test, TestServices } from '../test';
 
-// TODO: Use firebase in services to guarantee load order
+interface Multipliers {
+  lowestValueMultiplier: number;
+  highestValueMultiplier: number;
+}
+
 export const ReportDetails: FactoryComponent<HTMLDivElement & { report: Report }> = ({ attrs: { report } }) => {
   let lowestValueMultiplier = 0;
   let highestValueMultiplier = 0;
@@ -46,35 +51,45 @@ export const ReportDetails: FactoryComponent<HTMLDivElement & { report: Report }
     view: () => (
       div({ class: 'container fade-in-animation' }, [
         h1({ class: 'mb-md' }, `Report Details: ${report.id}`),
-        h4({ class: 'mb-md' }, report.description),
+        div({ class: 'mb-md' }, report.description),
         div({ class: 'mb-lg' }, [
           Timeago(new Date(<number>report.date))
         ]),
         div({ class: 'report-details' },
-          Object.keys(report.tests).map((testId) => ReportTest(report.tests[testId], lowestValueMultiplier, highestValueMultiplier))
+          Object.keys(report.tests).map((testId) => ReportTest(report.tests[testId], { lowestValueMultiplier, highestValueMultiplier }))
         )
       ])
     )
   };
 };
 
-const ReportTest = (test: Test, lowestValueMultiplier: number, highestValueMultiplier: number) => [
+const ReportTest = (test: Test, multipliers: Multipliers) => [
   div({ class: 'report-test-name' }, test.name),
   div({ class: 'report-test-unit' }, test.unit),
   div({ class: 'report-test-bar-container' }, [
     div({ class: 'report-test-bar background' }),
 
-    div({ class: 'report-test-bar min-value flex-row justify-content-center align-items-stretch', style: { left: getValuePosition(test.minValue, test, lowestValueMultiplier, highestValueMultiplier) + '%' } }, [
+    div({
+      class: 'report-test-bar min-value flex-row justify-content-center align-items-stretch',
+      style: { left: getValuePosition(test.minValue, test, multipliers) + '%' }
+    }, [
       div({ class: 'value-number' }, formatNumber(test.minValue))
     ]),
 
-    div({ class: 'report-test-bar max-value flex-row justify-content-center align-items-stretch', style: { left: getValuePosition(test.maxValue, test, lowestValueMultiplier, highestValueMultiplier) + '%' } }, [
+    div({
+      class: 'report-test-bar max-value flex-row justify-content-center align-items-stretch',
+      style: { left: getValuePosition(test.maxValue, test, multipliers) + '%' }
+    }, [
       div({ class: 'value-number' }, formatNumber(test.maxValue))
     ]),
 
     div({
-      class: `report-test-bar value flex-row justify-content-center align-items-stretch ${test.value < test.minValue ? 'low-value' : ''} ${test.value > test.maxValue ? 'high-value' : ''}`,
-      style: { left: getValuePosition(test.value, test, lowestValueMultiplier, highestValueMultiplier) + '%' }
+      class: classy({
+        'report-test-bar value flex-row justify-content-center align-items-stretch': true,
+        'low-value': test.value < test.minValue,
+        'high-value' : test.value > test.maxValue
+      }),
+      style: { left: getValuePosition(test.value, test, multipliers) + '%' }
     }, [
       div({ class: 'value-number' }, formatNumber(test.value))
     ])
@@ -83,14 +98,13 @@ const ReportTest = (test: Test, lowestValueMultiplier: number, highestValueMulti
 
 const getValuePosition = (
   value: number,
-  test: Test,
-  lowestValueMultiplier: number,
-  highestValueMultiplier: number
+  { minValue, maxValue }: Test,
+  { lowestValueMultiplier, highestValueMultiplier }: Multipliers
 ): number => {
-  const valueRange = test.maxValue - test.minValue;
-  const maxLowValue = test.minValue - valueRange * lowestValueMultiplier;
-  const maxHighValue = test.maxValue + valueRange * highestValueMultiplier;
-  return 100 * (value - maxLowValue) / (maxHighValue - maxLowValue);
+  const valueRange = maxValue - minValue;
+  const lowestValue = minValue - valueRange * lowestValueMultiplier;
+  const highestValue = maxValue + valueRange * highestValueMultiplier;
+  return 100 * (value - lowestValue) / (highestValue - lowestValue);
 };
 
 const formatNumber = (value: number) => value.toFixed(2);
