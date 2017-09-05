@@ -33,6 +33,18 @@ $report-test-bar-height: 24px;
     top: -5px;
     bottom: -5px;
     width: 5px;
+
+    > .value-number {
+      transition: all ($animation-duration / 2) $animation-easing;
+      transition-property: border-radius, box-shadow, transform;
+    }
+
+    &:hover > .value-number {
+      z-index: 1;
+      border-radius: 3px;
+      box-shadow: 0 0 0px 3px $primary;
+      transform: scale(1.2);
+    }
   }
 
   &.min-value,
@@ -50,6 +62,7 @@ $report-test-bar-height: 24px;
   }
 
   .value-number {
+    cursor: default;
     margin: 5px 0;
     background: inherit;
     height: $report-test-bar-height;
