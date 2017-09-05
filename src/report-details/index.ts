@@ -59,8 +59,8 @@ export const ReportDetails: FactoryComponent<HTMLDivElement & { report: Report }
 };
 
 const ReportTest = (test: Test, lowestValueMultiplier: number, highestValueMultiplier: number) => [
-  div(test.name),
-  div(test.unit),
+  div({ class: 'report-test-name' }, test.name),
+  div({ class: 'report-test-unit' }, test.unit),
   div({ class: 'report-test-bar-container' }, [
     div({ class: 'report-test-bar background' }),
 

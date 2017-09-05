@@ -85,7 +85,7 @@ textarea {
 // Layout
 .container {
   margin: 0 auto;
-  padding: 2 * $spacing;
+  padding: (2 * $spacing) (3 * $spacing);
   width: $md-max;
   max-width: 100%;
 }

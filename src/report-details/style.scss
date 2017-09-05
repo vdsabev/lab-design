@@ -6,12 +6,40 @@ $report-test-bar-height: 24px;
 .report-details {
   display: grid;
   grid-template-columns: auto auto 1fr;
-  grid-gap: 20px;
+  grid-gap: 2 * $spacing;
 }
 
 .report-test-bar-container {
   position: relative;
   height: $report-test-bar-height;
+}
+
+@media (max-width: $sm-max) {
+  .report-details {
+    grid-template-columns: 1fr auto;
+    grid-gap: $spacing;
+  }
+
+  .report-test-name {
+    grid-column: 1;
+  }
+
+  .report-test-unit {
+    grid-column: 2;
+  }
+
+  .report-test-bar-container {
+    grid-column: 1 / -1;
+    margin-bottom: 2 * $spacing;
+
+    &::after {
+      position: relative;
+      top: calc(100% + #{2 * $spacing});
+      display: block;
+      content: ' ';
+      border-bottom: 1px solid $neutral-dark;
+    }
+  }
 }
 
 .report-test-bar {
