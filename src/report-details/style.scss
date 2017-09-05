@@ -1,0 +1,59 @@
+@import '../style/variables';
+@import '../style/mixins';
+
+$report-test-bar-height: 24px;
+
+.report-details {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  grid-gap: 20px;
+}
+
+.report-test-bar-container {
+  position: relative;
+  height: $report-test-bar-height;
+}
+
+.report-test-bar {
+  color: $neutral-light;
+
+  &.background {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: $neutral-dark;
+  }
+
+  &.min-value,
+  &.max-value,
+  &.value {
+    position: absolute;
+    top: -5px;
+    bottom: -5px;
+    width: 5px;
+  }
+
+  &.min-value,
+  &.max-value {
+    background: $neutral-darker;
+  }
+
+  &.value {
+    background: $success;
+  }
+
+  &.low-value,
+  &.high-value {
+    background: $danger;
+  }
+
+  .value-number {
+    margin: 5px 0;
+    background: inherit;
+    height: $report-test-bar-height;
+    padding: 0 5px;
+    line-height: $report-test-bar-height;
+  }
+}

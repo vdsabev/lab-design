@@ -1,48 +1,64 @@
 {
   "private": true,
   "name": "lab-design",
-  "version": "0.0.0",
-  "angular-cli": {},
+  "version": "1.0.0",
   "scripts": {
-    "deploy": "ng build --prod && firebase deploy",
-    "start": "ng serve",
-    "lint": "tslint \"src/**/*.ts\"",
-    "test": "ng test",
-    "pree2e": "webdriver-manager update",
-    "e2e": "protractor"
+    "build": "webpack -p --env.production --display-modules",
+    "profile:build": "webpack --profile --json > ./build/profile.json",
+    "profile:open": "webpack-bundle-analyzer ./build/profile.json",
+    "start": "webpack-dev-server --port 3000 --history-api-fallback",
+    "test": "jest",
+    "jest": "jest --watch",
+    "deploy": "npm test && npm run build && firebase deploy"
   },
   "dependencies": {
-    "@angular/common": "2.2.3",
-    "@angular/compiler": "2.2.3",
-    "@angular/core": "2.2.3",
-    "@angular/forms": "2.2.3",
-    "@angular/http": "2.2.3",
-    "@angular/platform-browser": "2.2.3",
-    "@angular/platform-browser-dynamic": "2.2.3",
-    "@angular/router": "3.2.3",
-    "core-js": "^2.4.1",
-    "moment": "^2.15.1",
-    "rxjs": "5.0.0-beta.12",
-    "ts-helpers": "^1.1.1",
-    "underscore": "^1.8.3",
-    "zone.js": "^0.6.23"
+    "@types/mithril": "1.1.7",
+    "compote": "3.1.3",
+    "firebase": "4.3.0",
+    "mithril": "1.1.3"
   },
   "devDependencies": {
-    "@types/jasmine": "^2.2.30",
-    "@types/moment": "^2.13.0",
-    "angular-cli": "1.0.0-beta.15",
-    "codelyzer": "~0.0.26",
-    "firebase-tools": "^3.0.8",
-    "jasmine-core": "2.4.1",
-    "jasmine-spec-reporter": "2.5.0",
-    "karma": "1.2.0",
-    "karma-chrome-launcher": "^2.0.0",
-    "karma-cli": "^1.0.1",
-    "karma-jasmine": "^1.0.2",
-    "karma-remap-istanbul": "^0.2.1",
-    "protractor": "4.0.5",
-    "ts-node": "1.2.1",
-    "tslint": "3.13.0",
-    "typescript": "2.0.2"
+    "@types/jest": "20.0.8",
+    "autoprefixer": "7.1.3",
+    "clean-webpack-plugin": "0.1.16",
+    "css-loader": "0.28.7",
+    "extract-text-webpack-plugin": "3.0.0",
+    "file-loader": "0.11.2",
+    "firebase-tools": "3.10.0",
+    "html-webpack-plugin": "2.30.1",
+    "jest": "20.0.4",
+    "node-sass": "4.5.3",
+    "postcss-loader": "1.3.3",
+    "sass-loader": "6.0.6",
+    "style-loader": "0.18.2",
+    "ts-jest": "20.0.14",
+    "ts-loader": "2.3.4",
+    "typescript": "2.5.2",
+    "var": "0.3.1",
+    "webpack": "3.5.5",
+    "webpack-dev-server": "2.7.1",
+    "webpack-null-plugin": "0.0.2",
+    "workbox-webpack-plugin": "2.0.0"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx,js}",
+      "!src/**/*.test.{ts,tsx,js}",
+      "!src/**/*.d.ts",
+      "!node_modules/**"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "moduleNameMapper": {
+      "\\.(s?css|less)$": "<rootDir>/node_modules/compote/components/jest/style.js"
+    },
+    "testRegex": "(/__tests__/.*|\\.test)\\.(ts|tsx|js)$",
+    "transform": {
+      ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    }
   }
 }

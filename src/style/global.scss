@@ -1,0 +1,118 @@
+@import 'mixins';
+@import 'variables';
+
+// Full-height content
+html,
+body {
+  height: 100%;
+  font-family: $font-family;
+  font-size: $font-size;
+}
+
+body {
+  line-height: 1.22;
+  color: $foreground;
+}
+
+// Define heading classes
+// sass-lint:disable single-line-per-selector
+h1, .h1 { font-size: $h1-font-size; }
+h2, .h2 { font-size: $h2-font-size; }
+h3, .h3 { font-size: $h3-font-size; }
+h4, .h4 { font-size: $h4-font-size; }
+h5, .h5 { font-size: $h5-font-size; }
+h6, .h6 { font-size: $h6-font-size; }
+// sass-lint:enable single-line-per-selector
+
+a {
+  transition: color $animation-duration $animation-easing;
+  cursor: pointer;
+  color: $primary-dark;
+
+  &:hover {
+    color: $primary-darker;
+  }
+
+  &.underlined {
+    transition: border $animation-duration $animation-easing, color $animation-duration $animation-easing;
+    border-bottom: 0px solid transparent;
+
+    &:hover {
+      border-bottom: 4px solid $primary-light;
+    }
+  }
+}
+
+fieldset {
+  border: 0;
+}
+
+iframe {
+  border: 0;
+}
+
+textarea {
+  resize: vertical;
+}
+
+// Sizing
+.width-xxs { width: $size-xxs; };
+.width-xs { width: $size-xs; };
+.width-sm { width: $size-sm; };
+.width-md { width: $size-md; };
+.width-lg { width: $size-lg; };
+.width-xl { width: $size-xl; };
+.width-xxl { width: $size-xxl; };
+
+.width-25p { width: 25%; };
+.width-50p { width: 50%; };
+.width-75p { width: 75%; };
+.width-100p { width: 100%; };
+
+.height-xxs { height: $size-xxs; };
+.height-xs { height: $size-xs; };
+.height-sm { height: $size-sm; };
+.height-md { height: $size-md; };
+.height-lg { height: $size-lg; };
+.height-xl { height: $size-xl; };
+.height-xxl { height: $size-xxl; };
+
+.height-25p { height: 25%; };
+.height-50p { height: 50%; };
+.height-75p { height: 75%; };
+.height-100p { height: 100%; };
+
+// Layout
+.container {
+  margin: 0 auto;
+  padding: 2 * $spacing;
+  width: $sm-max;
+  max-width: 100%;
+}
+
+// Overflow
+.overflow-hidden {
+  @include overflow(hidden, hidden);
+}
+
+// Misc
+.br-none { border-radius: 0; }
+.br-xs { border-radius: $border-radius * 0.33; }
+.br-sm { border-radius: $border-radius * 0.66; }
+.br-md { border-radius: $border-radius; }
+.br-lg { border-radius: $border-radius * 1.33; }
+.br-xl { border-radius: $border-radius * 1.66; }
+.br-xxl { border-radius: $border-radius * 2; }
+.br-50p { border-radius: 50%; }
+
+.hidden {
+  display: none;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.unselectable {
+  user-select: none;
+}

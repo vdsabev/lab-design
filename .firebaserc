@@ -1,5 +1,5 @@
 {
   "projects": {
-    "production": "lab-design"
+    "default": "lab-design"
   }
 }
