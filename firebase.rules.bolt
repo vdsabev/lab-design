@@ -1,1 +1,57 @@
-// TODO
+// TODO: Test
+// Report
+path /reports/{reportId} is Report {
+  read() { true }
+}
+
+type Report {
+  read() { true }
+
+  date: InitialTimestamp,
+  description: String,
+  tests: ReportTest[]
+}
+
+type ReportTest {
+  value: Number
+}
+
+// Test
+path /tests/{testId} is Test;
+
+type Test {
+  read() { true }
+
+  name: String,
+  unit: String,
+  minValue: Number,
+  maxValue: Number
+}
+
+// User
+path /users/{userId} is User;
+
+type User {
+  read() { true }
+
+  name: String,
+  imageUrl: String,
+  reports: Boolean[],
+
+  birthdate: PastTimestamp,
+  gender: Gender
+}
+
+// Misc
+// Types
+type InitialTimestamp extends Number {
+  validate() { this == (prior(this) == null ? now : prior(this)) }
+}
+
+type PastTimestamp extends Number {
+  validate() { this < now }
+}
+
+type Gender extends String {
+  validate() { this == 'male' || this == 'female' || this == 'other' }
+}

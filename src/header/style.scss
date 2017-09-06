@@ -1,0 +1,23 @@
+@import '../style/variables';
+@import '../style/mixins';
+
+#header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: $primary;
+  color: $neutral-lighter;
+}
+
+.menu-link {
+  transition: all $animation-duration $animation-easing;
+  transition-property: background, color;
+  color: $neutral-lighter;
+  font-size: 1.2em;
+  line-height: $header-height;
+
+  &:hover {
+    background: $neutral-lighter;
+    color: $foreground-darker;
+  }
+}
