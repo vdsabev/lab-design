@@ -10,8 +10,6 @@ body {
 }
 
 body {
-  display: grid;
-  grid-template-rows: $header-height 1fr;
   line-height: 1.22;
   color: $foreground;
 }
