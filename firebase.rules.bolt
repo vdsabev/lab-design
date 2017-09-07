@@ -1,45 +1,69 @@
-// TODO: Test
+// Indicator
+path /indicators {
+  read() { true }
+}
+
+path /indicators/{indicatorId} is Indicator {
+  read() { true }
+}
+
+type Indicator {
+  name: String,
+  unit: String,
+  reference: Reference
+}
+
+// Log
+path /logs {
+  read() { true }
+}
+
+path /logs/{logId} is Log {
+  read() { true }
+}
+
+type Log {
+  date: InitialTimestamp,
+  text: String,
+}
+
 // Report
+path /reports {
+  read() { true }
+}
+
 path /reports/{reportId} is Report {
   read() { true }
 }
 
 type Report {
-  read() { true }
-
   date: InitialTimestamp,
-  description: String,
-  tests: ReportTest[]
+  text: String,
+  indicators: ReportIndicator[]
 }
 
-type ReportTest {
+type ReportIndicator {
   value: Number
 }
 
-// Test
-path /tests/{testId} is Test;
-
-type Test {
+// User
+path /users/{userId} is User {
   read() { true }
-
-  name: String,
-  unit: String,
-  minValue: Number,
-  maxValue: Number
 }
 
-// User
-path /users/{userId} is User;
-
 type User {
-  read() { true }
-
   name: String,
   imageUrl: String,
   reports: Boolean[],
+  reference: Reference[],
 
   birthdate: PastTimestamp,
   gender: Gender
+}
+
+type Reference {
+  min: Number,
+  max: Number
 }
 
 // Misc

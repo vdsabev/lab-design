@@ -1,4 +1,4 @@
-import { Test } from '../test';
+import { Indicator } from '../indicator';
 
 import * as Services from './services';
 export const ReportServices = Services;
@@ -8,5 +8,5 @@ export interface Report {
 
   date: number | Object;
   description: string;
-  tests: Record<string, Test>;
+  indicators: Record<string, Indicator>;
 }

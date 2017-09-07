@@ -1,7 +1,7 @@
 @import '../style/variables';
 @import '../style/mixins';
 
-$report-test-bar-height: 24px;
+$report-indicator-bar-height: 24px;
 
 .report-details {
   display: grid;
@@ -9,9 +9,9 @@ $report-test-bar-height: 24px;
   grid-gap: 2 * $spacing;
 }
 
-.report-test-bar-container {
+.report-indicator-bar-container {
   position: relative;
-  height: $report-test-bar-height;
+  height: $report-indicator-bar-height;
 }
 
 @media (max-width: $sm-max) {
@@ -20,15 +20,15 @@ $report-test-bar-height: 24px;
     grid-gap: $spacing;
   }
 
-  .report-test-name {
+  .report-indicator-name {
     grid-column: 1;
   }
 
-  .report-test-unit {
+  .report-indicator-unit {
     grid-column: 2;
   }
 
-  .report-test-bar-container {
+  .report-indicator-bar-container {
     grid-column: 1 / -1;
     margin-bottom: 2 * $spacing;
 
@@ -42,7 +42,7 @@ $report-test-bar-height: 24px;
   }
 }
 
-.report-test-bar {
+.report-indicator-bar {
   color: $neutral-light;
 
   &.background {
@@ -93,8 +93,8 @@ $report-test-bar-height: 24px;
     cursor: default;
     margin: 5px 0;
     background: inherit;
-    height: $report-test-bar-height;
+    height: $report-indicator-bar-height;
     padding: 0 5px;
-    line-height: $report-test-bar-height;
+    line-height: $report-indicator-bar-height;
   }
 }

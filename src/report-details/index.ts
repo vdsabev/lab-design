@@ -5,8 +5,8 @@ import { Timeago } from 'compote/components/timeago';
 import { classy } from 'compote/components/utils';
 import { FactoryComponent, redraw } from 'mithril';
 
+import { Indicator, IndicatorServices } from '../indicator';
 import { Report } from '../report';
-import { Test, TestServices } from '../test';
 
 interface Multipliers {
   lowestValueMultiplier: number;
@@ -17,93 +17,93 @@ export const ReportDetails: FactoryComponent<HTMLDivElement & { report: Report }
   let lowestValueMultiplier = 0;
   let highestValueMultiplier = 0;
 
-  const loadTests = (tests: Record<string, Test>) => {
-    Object.keys(tests).forEach(async (testId) => {
-      const test = await TestServices.get(testId);
-      const reportTest = report.tests[testId] = { ...test, ...tests[testId] };
-      updateMultipliers(reportTest);
+  const loadIndicators = (indicators: Record<string, Indicator>) => {
+    Object.keys(indicators).forEach(async (indicatorId) => {
+      const indicator = await IndicatorServices.get(indicatorId);
+      const reportIndicator = report.indicators[indicatorId] = { ...indicator, ...indicators[indicatorId] };
+      updateMultipliers(reportIndicator);
       redraw();
     });
   };
 
-  const updateMultipliers = (test: Test) => {
-    const valueRange = test.maxValue - test.minValue;
+  const updateMultipliers = (indicator: Indicator) => {
+    const valueRange = indicator.reference.max - indicator.reference.min;
 
-    if (test.value < test.minValue) {
-      const lowMultiplier = (test.minValue - test.value) / valueRange;
+    if (indicator.value < indicator.reference.min) {
+      const lowMultiplier = (indicator.reference.min - indicator.value) / valueRange;
       if (lowMultiplier > lowestValueMultiplier) {
         lowestValueMultiplier = lowMultiplier;
       }
     }
 
-    if (test.value > test.maxValue) {
-      const highMultiplier = (test.value - test.maxValue) / valueRange;
+    if (indicator.value > indicator.reference.max) {
+      const highMultiplier = (indicator.value - indicator.reference.max) / valueRange;
       if (highMultiplier > highestValueMultiplier) {
         highestValueMultiplier = highMultiplier;
       }
     }
   };
 
-  loadTests(report.tests);
-  report.tests = {};
+  loadIndicators(report.indicators);
+  report.indicators = {};
 
   return {
     view: () => (
       div({ class: 'container fade-in-animation' }, [
-        h1({ class: 'mb-md' }, `Report Details: ${report.id}`),
+        h1({ class: 'mb-md' }, report.id),
         div({ class: 'mb-md' }, report.description),
         div({ class: 'mb-lg' }, [
           Timeago(new Date(<number>report.date))
         ]),
         div({ class: 'report-details' },
-          Object.keys(report.tests).map((testId) => ReportTest(report.tests[testId], { lowestValueMultiplier, highestValueMultiplier }))
+          Object.keys(report.indicators).map((indicatorId) => ReportIndicator(report.indicators[indicatorId], { lowestValueMultiplier, highestValueMultiplier }))
         )
       ])
     )
   };
 };
 
-const ReportTest = (test: Test, multipliers: Multipliers) => [
-  div({ class: 'report-test-name' }, test.name),
-  div({ class: 'report-test-unit' }, test.unit),
-  div({ class: 'report-test-bar-container' }, [
-    div({ class: 'report-test-bar background' }),
+const ReportIndicator = (indicator: Indicator, multipliers: Multipliers) => [
+  div({ class: 'report-indicator-name' }, indicator.name),
+  div({ class: 'report-indicator-unit' }, indicator.unit),
+  div({ class: 'report-indicator-bar-container' }, [
+    div({ class: 'report-indicator-bar background' }),
 
     div({
-      class: 'report-test-bar min-value flex-row justify-content-center align-items-stretch',
-      style: { left: getValuePosition(test.minValue, test, multipliers) + '%' }
+      class: 'report-indicator-bar min-value flex-row justify-content-center align-items-stretch',
+      style: { left: getValuePosition(indicator.reference.min, indicator, multipliers) + '%' }
     }, [
-      div({ class: 'value-number' }, formatNumber(test.minValue))
+      div({ class: 'value-number' }, formatNumber(indicator.reference.min))
     ]),
 
     div({
-      class: 'report-test-bar max-value flex-row justify-content-center align-items-stretch',
-      style: { left: getValuePosition(test.maxValue, test, multipliers) + '%' }
+      class: 'report-indicator-bar max-value flex-row justify-content-center align-items-stretch',
+      style: { left: getValuePosition(indicator.reference.max, indicator, multipliers) + '%' }
     }, [
-      div({ class: 'value-number' }, formatNumber(test.maxValue))
+      div({ class: 'value-number' }, formatNumber(indicator.reference.max))
     ]),
 
     div({
       class: classy({
-        'report-test-bar value flex-row justify-content-center align-items-stretch': true,
-        'low-value': test.value < test.minValue,
-        'high-value' : test.value > test.maxValue
+        'report-indicator-bar value flex-row justify-content-center align-items-stretch': true,
+        'low-value': indicator.value < indicator.reference.min,
+        'high-value' : indicator.value > indicator.reference.max
       }),
-      style: { left: getValuePosition(test.value, test, multipliers) + '%' }
+      style: { left: getValuePosition(indicator.value, indicator, multipliers) + '%' }
     }, [
-      div({ class: 'value-number' }, formatNumber(test.value))
+      div({ class: 'value-number' }, formatNumber(indicator.value))
     ])
   ])
 ];
 
 const getValuePosition = (
   value: number,
-  { minValue, maxValue }: Test,
+  { reference: { min, max } }: Indicator,
   { lowestValueMultiplier, highestValueMultiplier }: Multipliers
 ): number => {
-  const valueRange = maxValue - minValue;
-  const lowestValue = minValue - valueRange * lowestValueMultiplier;
-  const highestValue = maxValue + valueRange * highestValueMultiplier;
+  const valueRange = max - min;
+  const lowestValue = min - valueRange * lowestValueMultiplier;
+  const highestValue = max + valueRange * highestValueMultiplier;
   return 100 * (value - lowestValue) / (highestValue - lowestValue);
 };
 
