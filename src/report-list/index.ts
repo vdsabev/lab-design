@@ -3,7 +3,7 @@ import { Component, route } from 'mithril';
 
 import { Report } from '../report';
 
-export const ReportList: Component<HTMLDivElement & { reports: Report[] }, null> = {
+export const ReportList: Component<Partial<HTMLDivElement> & { reports: Report[] }, null> = {
   view: ({ attrs: { reports } }) => (
     div({ class: 'container' }, reports.map((report) =>
       a({ oncreate: route.link, href: `/reports/${report.id}` }, [

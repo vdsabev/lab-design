@@ -14,12 +14,9 @@ type Indicator {
 }
 
 // Log
-path /logs {
-  read() { true }
-}
-
-path /logs/{logId} is Log {
-  read() { true }
+path /logs/{userId} is Log[] {
+  read() { isCurrentUser(userId) }
+  write() { isCurrentUser(userId) }
 }
 
 type Log {
@@ -27,13 +24,19 @@ type Log {
   text: String,
 }
 
-// Report
-path /reports {
-  read() { true }
+// Reference
+path /references/{userId} is Reference[] {
+  read() { isCurrentUser(userId) }
 }
 
-path /reports/{reportId} is Report {
-  read() { true }
+type Reference {
+  min: Number,
+  max: Number
+}
+
+// Report
+path /reports/{userId} is Report[] {
+  read() { isCurrentUser(userId) }
 }
 
 type Report {
@@ -49,21 +52,16 @@ type ReportIndicator {
 // User
 path /users/{userId} is User {
   read() { true }
+  write() { isCurrentUser(userId) }
 }
 
 type User {
   name: String,
-  imageUrl: String,
-  reports: Boolean[],
-  reference: Reference[],
-
-  birthdate: PastTimestamp,
+  imageUrl: String | Null
   gender: Gender
-}
 
-type Reference {
-  min: Number,
-  max: Number
+  // TODO: Move to a private object
+  birthdate: PastTimestamp,
 }
 
 // Misc
@@ -78,4 +76,13 @@ type PastTimestamp extends Number {
 
 type Gender extends String {
   validate() { this == 'male' || this == 'female' || this == 'other' }
+}
+
+// Functions
+function isAuthenticated() {
+  auth != null
+}
+
+function isCurrentUser(uid) {
+  isAuthenticated() && auth.uid == uid
 }

@@ -6,18 +6,21 @@ import './style.scss';
 import { setHyperscriptFunction } from 'compote';
 import * as m from 'mithril';
 
+import { initializeAuth } from './auth';
 import { initializeFirebaseApp } from './firebase';
 import { Header } from './header';
 import { initializeRouter } from './router';
+import { store } from './store';
 
 setHyperscriptFunction(m);
 initializeApp();
 
 function initializeApp() {
   initializeFirebaseApp();
+  initializeAuth();
   registerServiceWorker();
   initializeRouter();
-  mountHeader();
+  subscribeToStore();
 }
 
 function registerServiceWorker() {
@@ -26,7 +29,12 @@ function registerServiceWorker() {
   }
 }
 
-function mountHeader() {
+function subscribeToStore() {
+  store.subscribe(m.redraw);
+
   const header = document.querySelector('#header');
-  m.mount(header, Header);
+  const unsubscribe = store.subscribe(() => {
+    m.mount(header, Header);
+    unsubscribe();
+  });
 }
