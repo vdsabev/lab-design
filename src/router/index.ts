@@ -10,6 +10,10 @@ import { ReportList } from '../report-list';
 import { pipeline, ifLoggedInRedirectTo, authorize, queryLogs, queryReports, getReport } from './pipelines';
 export { reloadRoute } from './pipelines';
 
+export type RouteParams = Record<string, string>;
+
+export type Component<A = any, S = any> = m.FactoryComponent<A> | m.Component<A, S>;
+
 export function initializeRouter() {
   m.route.prefix('');
 
@@ -31,10 +35,6 @@ export function initializeRouter() {
     '/:url': NotFound
   });
 }
-
-export type RouteParams = Record<string, string>;
-
-export type Component<A = any, S = any> = m.FactoryComponent<A> | m.Component<A, S>;
 
 const redirectTo = (url: string) => () => {
   m.route.set(url);

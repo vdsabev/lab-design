@@ -13,12 +13,12 @@ import { isLoggedIn } from '../user';
 import { RouteParams, Component } from './index';
 
 interface PipelineStep {
-  getState: (state?: Record<string, any>, params?: RouteParams) => Promise<any>;
+  getState: (state?: PipelineState, params?: RouteParams) => Promise<PipelineState | void>;
   onError?: PipelineStepHandler;
 }
 
 interface PipelineStepHandler {
-  (state?: Record<string, any>, params?: RouteParams): Component;
+  (state?: PipelineState, params?: RouteParams): Component;
 }
 
 type PipelineState = Record<string, any>;
@@ -59,51 +59,32 @@ export const getReport: PipelineStep = {
 export const pipeline = (steps: PipelineStep[], componentFn: PipelineStepHandler) => {
   if (steps.length === 0) throw new Error(`Pipeline must contain at least 1 element! ${JSON.stringify(steps, null, 2)}`);
 
-  let stepIndex: number;
-  let state: Record<string, any>;
-  let failed: boolean;
-  let succeeded: boolean;
-
-  const reset = () => {
-    stepIndex = 0;
-    state = {};
-    failed = null;
-    succeeded = null;
-  };
-
-  reset();
-
-  return (params: RouteParams) => new Promise((resolve) => {
-    if (failed) {
-      const onError = steps[stepIndex].onError;
-      resolve(onError(state, params));
-      reset();
+  let loading = false;
+  return (params: RouteParams) => new Promise<Component>((resolve) => {
+    if (!loading) {
+      loading = true;
+      resolve(Loading);
+      reloadRoute();
       return;
     }
 
-    if (succeeded) {
-      if (stepIndex === steps.length - 1) {
-        resolve(componentFn(state, params));
-        reset();
-        return;
-      }
+    let state: PipelineState = {};
+    steps.reduce((promise, step) => {
+      if (!promise) return step.getState(state, params);
 
-      succeeded = null;
-      stepIndex++;
-    }
-
-    resolve(Loading);
-    const stateFn = steps[stepIndex].getState;
-    stateFn(state, params)
-      .catch(() => {
-        failed = true;
-        reloadRoute();
-      })
-      .then((newState) => {
-        succeeded = true;
-        state = { ...<any>state, ...<any>newState };
-        reloadRoute();
+      return promise.catch(() => {
+        loading = false;
+        resolve(step.onError(state, params));
+      }).then((newState) => {
+        if (newState) {
+          state = { ...state, ...newState };
+        }
+        return step.getState(state, params);
       });
+    }, <Promise<PipelineState | void>>null).then(() => {
+      loading = false;
+      resolve(componentFn(state, params));
+    });
   });
 };
 
