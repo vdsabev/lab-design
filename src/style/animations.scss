@@ -1,26 +1,16 @@
+@import '~compote/style/animations';
+
+@import 'mixins';
 @import 'variables';
 
-.fade-in-animation {
-  animation: fadeIn $animation-duration $animation-easing;
-}
+@include create-animation('.fade-in-animation', fadeIn $animation-duration $animation-easing);
+@include create-animation('.fade-out-animation', fadeOut $animation-duration $animation-easing);
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
+@include create-animation('.spin-right-animation', spinRight (2 * $animation-duration) linear infinite);
+@include create-animation('.spin-left-animation', spinLeft (2 * $animation-duration) linear infinite);
 
-.fade-out-animation {
-  animation: fadeOut $animation-duration $animation-easing;
-}
-
-@keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
-
-.scale-in-animation {
-  animation: scaleIn $animation-duration ease;
-}
+@include create-animation('.scale-in-animation', scaleIn $animation-duration ease);
+@include create-animation('.scale-out-animation', scaleOut $animation-duration ease);
 
 @keyframes scaleIn {
   from {
@@ -32,10 +22,6 @@
     transform: scale(1);
     opacity: 1;
   }
-}
-
-.scale-out-animation {
-  animation: scaleOut $animation-duration ease;
 }
 
 @keyframes scaleOut {

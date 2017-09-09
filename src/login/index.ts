@@ -14,7 +14,7 @@ interface State {
 
 // TODO: Use form data
 // TODO: Add validation
-export const LoginForm: FactoryComponent<State> = () => {
+export const Login: FactoryComponent<State> = () => {
   const state: State = {};
 
   const setEmail = withAttr('value', set<State>('email')(state));

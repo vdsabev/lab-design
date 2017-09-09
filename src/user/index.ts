@@ -16,4 +16,4 @@ export interface UserProfile {
   birthdate: number | Object;
 }
 
-export const isLoggedIn = (currentUser: CurrentUser) => currentUser != null && currentUser.auth != null;
+export const isLoggedIn = (currentUser: CurrentUser) => currentUser != null && currentUser.auth != null && currentUser.auth.uid != null;

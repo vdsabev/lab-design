@@ -20,7 +20,7 @@ function initializeApp() {
   initializeAuth();
   registerServiceWorker();
   initializeRouter();
-  subscribeToStore();
+  renderApp();
 }
 
 function registerServiceWorker() {
@@ -29,12 +29,9 @@ function registerServiceWorker() {
   }
 }
 
-function subscribeToStore() {
-  store.subscribe(m.redraw);
-
+function renderApp() {
   const header = document.querySelector('#header');
-  const unsubscribe = store.subscribe(() => {
-    m.mount(header, Header);
-    unsubscribe();
-  });
+  m.mount(header, Header);
+
+  store.subscribe(m.redraw);
 }

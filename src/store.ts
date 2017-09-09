@@ -1,6 +1,7 @@
 import { logger } from 'compote/components/logger';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 
+import { reloadRoute } from './router';
 import { CurrentUser } from './user';
 
 interface State {
@@ -26,8 +27,10 @@ export function currentUser(state: Partial<CurrentUser> = null, action: CurrentU
   case Actions.USER_PROFILE_LOADED:
     return { ...state, profile: action.profile };
   case Actions.USER_LOGGED_IN:
+    reloadRoute();
     return { auth: action.auth };
   case Actions.USER_LOGGED_OUT:
+    reloadRoute();
     return {};
   default:
     return state;
