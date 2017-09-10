@@ -69,6 +69,13 @@ export const pipeline = (steps: PipelineStep[], componentFn: PipelineStepHandler
     }
 
     let state: PipelineState = {};
+
+    const setState = (newState: PipelineState | void) => {
+      if (newState) {
+        state = { ...state, ...newState };
+      }
+    };
+
     steps.reduce((promise, step) => {
       if (!promise) return step.getState(state, params);
 
@@ -76,12 +83,11 @@ export const pipeline = (steps: PipelineStep[], componentFn: PipelineStepHandler
         loading = false;
         resolve(step.onError(state, params));
       }).then((newState) => {
-        if (newState) {
-          state = { ...state, ...newState };
-        }
+        setState(newState);
         return step.getState(state, params);
       });
-    }, <Promise<PipelineState | void>>null).then(() => {
+    }, <Promise<PipelineState | void>>null).then((newState) => {
+      setState(newState);
       loading = false;
       resolve(componentFn(state, params));
     });
