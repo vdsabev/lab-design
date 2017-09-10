@@ -1,5 +1,4 @@
 import * as m from 'mithril';
-import { render, route } from 'mithril';
 
 import { Unauthorized } from '../401-unauthorized';
 import { NotFound } from '../404-not-found';
@@ -26,7 +25,7 @@ type PipelineState = Record<string, any>;
 
 export const loadWith = (el: Element): PipelineStep => ({
   async getState(): Promise<void> {
-    render(el, m(Loading));
+    m.render(el, m(Loading));
   }
 });
 
@@ -34,7 +33,7 @@ export const ifLoggedInRedirectTo = (url: string): PipelineStep => ({
   async getState(): Promise<void> {
     await initialUserAuth;
     const { currentUser } = store.getState();
-    if (isLoggedIn(currentUser)) route.set(url);
+    if (isLoggedIn(currentUser)) m.route.set(url);
   }
 });
 
@@ -91,8 +90,4 @@ export const pipeline = (steps: PipelineStep[], componentFn: PipelineStepHandler
 
     return componentFn(state, params);
   };
-};
-
-export const reloadRoute = () => {
-  route.set(window.location.href, undefined, { replace: true });
 };

@@ -8,7 +8,6 @@ import { ReportDetails } from '../report-details';
 import { ReportList } from '../report-list';
 
 import { pipeline, loadWith, ifLoggedInRedirectTo, authorize, queryLogs, queryReports, getReport } from './pipelines';
-export { reloadRoute } from './pipelines';
 
 export type RouteParams = Record<string, string>;
 
@@ -37,6 +36,10 @@ export function initializeRouter() {
     '/:url': NotFound
   });
 }
+
+export const reloadRoute = () => {
+  m.route.set(window.location.href, undefined, { replace: true });
+};
 
 const redirectTo = (url: string) => () => {
   m.route.set(url);
