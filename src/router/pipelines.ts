@@ -75,26 +75,22 @@ export const getReport: PipelineStep = {
 export const pipeline = (steps: PipelineStep[], componentFn: PipelineStepHandler) => {
   if (steps.length === 0) throw new Error(`Pipeline must contain at least 1 element! ${JSON.stringify(steps, null, 2)}`);
 
-  // TODO: Rewrite with async / await
-  return (params: RouteParams) => new Promise<Component>((resolve) => {
+  return async (params: RouteParams): Promise<Component> => {
     let state: PipelineState = {};
-    const allStepsDone = steps.reduce(async (promise, currentStep) => {
-      await promise;
+    for (const step of steps) {
       try {
-        const newState = await currentStep.getState(state, params);
+        const newState = await step.getState(state, params);
         if (newState) {
           state = { ...state, ...newState };
         }
       }
       catch (error) {
-        resolve(currentStep.onError(state, params));
+        return step.onError(state, params);
       }
-    }, Promise.resolve(<PipelineState | void>{}));
+    }
 
-    allStepsDone.then(() => {
-      resolve(componentFn(state, params));
-    });
-  });
+    return componentFn(state, params);
+  };
 };
 
 export const reloadRoute = () => {
