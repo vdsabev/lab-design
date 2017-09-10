@@ -7,7 +7,7 @@ import { Login } from '../login';
 import { ReportDetails } from '../report-details';
 import { ReportList } from '../report-list';
 
-import { pipeline, ifLoggedInRedirectTo, authorize, queryLogs, queryReports, getReport } from './pipelines';
+import { pipeline, loadWith, ifLoggedInRedirectTo, authorize, queryLogs, queryReports, getReport } from './pipelines';
 export { reloadRoute } from './pipelines';
 
 export type RouteParams = Record<string, string>;
@@ -18,19 +18,21 @@ export function initializeRouter() {
   m.route.prefix('');
 
   const content = document.querySelector('#content');
+  const loading = loadWith(content);
+
   m.route(content, '/', {
     '/': redirectTo('/reports'),
     '/login': {
-      onmatch: pipeline([ifLoggedInRedirectTo('/')], load(Login))
+      onmatch: pipeline([loading, ifLoggedInRedirectTo('/')], load(Login))
     },
     '/logs': {
-      onmatch: pipeline([authorize, queryLogs], load(LogList, 'logs'))
+      onmatch: pipeline([loading, authorize, queryLogs], load(LogList, 'logs'))
     },
     '/reports': {
-      onmatch: pipeline([authorize, queryReports], load(ReportList, 'reports'))
+      onmatch: pipeline([loading, authorize, queryReports], load(ReportList, 'reports'))
     },
     '/reports/:reportId': {
-      onmatch: pipeline([authorize, getReport], load(ReportDetails, 'report'))
+      onmatch: pipeline([loading, authorize, getReport], load(ReportDetails, 'report'))
     },
     '/:url': NotFound
   });

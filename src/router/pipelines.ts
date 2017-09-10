@@ -1,12 +1,13 @@
-import { route } from 'mithril';
+import * as m from 'mithril';
+import { render, route } from 'mithril';
 
 import { Unauthorized } from '../401-unauthorized';
 import { NotFound } from '../404-not-found';
 import { Loading } from '../loading';
 
 import { initialUserAuth } from '../auth';
-import { LogServices } from '../log';
-import { ReportServices } from '../report';
+import { Log, LogServices } from '../log';
+import { Report, ReportServices } from '../report';
 import { store } from '../store';
 import { isLoggedIn } from '../user';
 
@@ -23,8 +24,14 @@ interface PipelineStepHandler {
 
 type PipelineState = Record<string, any>;
 
+export const loadWith = (el: Element): PipelineStep => ({
+  async getState(): Promise<void> {
+    render(el, m(Loading));
+  }
+});
+
 export const ifLoggedInRedirectTo = (url: string): PipelineStep => ({
-  getState: async () => {
+  async getState(): Promise<void> {
     await initialUserAuth;
     const { currentUser } = store.getState();
     if (isLoggedIn(currentUser)) route.set(url);
@@ -32,7 +39,7 @@ export const ifLoggedInRedirectTo = (url: string): PipelineStep => ({
 });
 
 export const authorize: PipelineStep = {
-  getState: async () => {
+  async getState(): Promise<{ userId: string }> {
     await initialUserAuth;
     const { currentUser } = store.getState();
     if (!isLoggedIn(currentUser)) throw new Error('Unauthorized');
@@ -42,53 +49,49 @@ export const authorize: PipelineStep = {
 };
 
 export const queryLogs: PipelineStep = {
-  getState: ({ userId }: PipelineState) => LogServices.query(userId).then((logs) => ({ logs })),
+  async getState({ userId }): Promise<{ logs: Log[] }> {
+    const logs = await LogServices.query(userId);
+    return { logs };
+  },
   onError: () => NotFound // TODO: Handle other errors
 };
 
 export const queryReports: PipelineStep = {
-  getState: ({ userId }: PipelineState) => ReportServices.query(userId).then((reports) => ({ reports })),
+  async getState({ userId }): Promise<{ reports: Report[] }> {
+    const reports = await ReportServices.query(userId);
+    return { reports };
+  },
   onError: () => NotFound // TODO: Handle other errors
 };
 
 export const getReport: PipelineStep = {
-  getState: ({ userId }: PipelineState, { reportId }: RouteParams) => ReportServices.get(userId, reportId).then((report) => ({ report })),
+  async getState({ userId }, { reportId }): Promise<{ report: Report }> {
+    const report = await ReportServices.get(userId, reportId);
+    return { report };
+  },
   onError: () => NotFound // TODO: Handle other errors
 };
 
 export const pipeline = (steps: PipelineStep[], componentFn: PipelineStepHandler) => {
   if (steps.length === 0) throw new Error(`Pipeline must contain at least 1 element! ${JSON.stringify(steps, null, 2)}`);
 
-  let loading = false;
+  // TODO: Rewrite with async / await
   return (params: RouteParams) => new Promise<Component>((resolve) => {
-    if (!loading) {
-      loading = true;
-      resolve(Loading);
-      reloadRoute();
-      return;
-    }
-
     let state: PipelineState = {};
-
-    const setState = (newState: PipelineState | void) => {
-      if (newState) {
-        state = { ...state, ...newState };
+    const allStepsDone = steps.reduce(async (promise, currentStep) => {
+      await promise;
+      try {
+        const newState = await currentStep.getState(state, params);
+        if (newState) {
+          state = { ...state, ...newState };
+        }
       }
-    };
+      catch (error) {
+        resolve(currentStep.onError(state, params));
+      }
+    }, Promise.resolve(<PipelineState | void>{}));
 
-    steps.reduce((promise, step) => {
-      if (!promise) return step.getState(state, params);
-
-      return promise.catch(() => {
-        loading = false;
-        resolve(step.onError(state, params));
-      }).then((newState) => {
-        setState(newState);
-        return step.getState(state, params);
-      });
-    }, <Promise<PipelineState | void>>null).then((newState) => {
-      setState(newState);
-      loading = false;
+    allStepsDone.then(() => {
       resolve(componentFn(state, params));
     });
   });
