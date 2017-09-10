@@ -1,4 +1,5 @@
 import { logger } from 'compote/components/logger';
+import { route } from 'mithril';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 
 import { reloadRoute } from './router';
@@ -30,7 +31,9 @@ export function currentUser(state: Partial<CurrentUser> = null, action: CurrentU
     reloadRoute();
     return { auth: action.auth };
   case Actions.USER_LOGGED_OUT:
-    reloadRoute();
+    if (state != null) {
+      route.set('/');
+    }
     return {};
   default:
     return state;
