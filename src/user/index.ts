@@ -14,6 +14,12 @@ export interface UserProfile {
   imageUrl: string;
   gender: 'male' | 'female' | 'other';
   birthdate: number | Object;
+  indicators: Record<string, UserIndicator>;
+}
+
+interface UserIndicator {
+  date: number | Object;
+  value: number;
 }
 
 export const isLoggedIn = (currentUser: CurrentUser) => currentUser != null && currentUser.auth != null && currentUser.auth.uid != null;

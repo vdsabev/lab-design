@@ -14,8 +14,9 @@ export const Header: Component<Partial<HTMLDivElement>, null> = {
     return (
       div({ class: 'container flex-row align-items-center' }, [
         img({ class: 'width-xs mr-md', src: 'icon.png' }),
-        a({ class: 'menu-link pa-md', oncreate: route.link, href: '/reports' }, 'Reports'),
+        a({ class: 'menu-link pa-md', oncreate: route.link, href: '/profile' }, 'Profile'),
         a({ class: 'menu-link pa-md', oncreate: route.link, href: '/logs' }, 'Logs'),
+        a({ class: 'menu-link pa-md', oncreate: route.link, href: '/reports' }, 'Reports'),
         div({ style: flex(1) }),
         currentUser != null ?
           isLoggedIn(currentUser) ? LogoutLink() : LoginLink()

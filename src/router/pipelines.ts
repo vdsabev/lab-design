@@ -8,7 +8,7 @@ import { initialUserAuth } from '../auth';
 import { Log, LogServices } from '../log';
 import { Report, ReportServices } from '../report';
 import { store } from '../store';
-import { isLoggedIn } from '../user';
+import { UserProfile, UserServices, isLoggedIn } from '../user';
 
 import { RouteParams, Component } from './index';
 
@@ -37,39 +37,47 @@ export const ifLoggedInRedirectTo = (url: string): PipelineStep => ({
   }
 });
 
-export const authorize: PipelineStep = {
-  async getState(): Promise<{ userId: string }> {
+export const getUserId = (key: string): PipelineStep => ({
+  async getState(): Promise<Record<string, string>> {
     await initialUserAuth;
     const { currentUser } = store.getState();
     if (!isLoggedIn(currentUser)) throw new Error('Unauthorized');
-    return { userId: currentUser.auth.uid };
+    return { [key]: currentUser.auth.uid };
   },
   onError: () => Unauthorized
-};
+});
 
-export const queryLogs: PipelineStep = {
-  async getState({ userId }): Promise<{ logs: Log[] }> {
+export const getUserProfile = (key: string): PipelineStep => ({
+  async getState({ userId }): Promise<Record<string, UserProfile>> {
+    const profile = await UserServices.getProfile(userId);
+    return { [key]: profile };
+  },
+  onError: () => NotFound // TODO: Handle other errors
+});
+
+export const queryLogs = (key: string): PipelineStep => ({
+  async getState({ userId }): Promise<Record<string, Log[]>> {
     const logs = await LogServices.query(userId);
-    return { logs };
+    return { [key]: logs };
   },
   onError: () => NotFound // TODO: Handle other errors
-};
+});
 
-export const queryReports: PipelineStep = {
-  async getState({ userId }): Promise<{ reports: Report[] }> {
+export const queryReports = (key: string): PipelineStep => ({
+  async getState({ userId }): Promise<Record<string, Report[]>> {
     const reports = await ReportServices.query(userId);
-    return { reports };
+    return { [key]: reports };
   },
   onError: () => NotFound // TODO: Handle other errors
-};
+});
 
-export const getReport: PipelineStep = {
-  async getState({ userId }, { reportId }): Promise<{ report: Report }> {
+export const getReport = (key: string): PipelineStep => ({
+  async getState({ userId }, { reportId }): Promise<Record<string, Report>> {
     const report = await ReportServices.get(userId, reportId);
-    return { report };
+    return { [key]: report };
   },
   onError: () => NotFound // TODO: Handle other errors
-};
+});
 
 export const pipeline = (steps: PipelineStep[], componentFn: PipelineStepHandler) => {
   if (steps.length === 0) throw new Error(`Pipeline must contain at least 1 element! ${JSON.stringify(steps, null, 2)}`);

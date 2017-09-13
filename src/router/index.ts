@@ -4,10 +4,11 @@ import { NotFound } from '../404-not-found';
 import { Loading } from '../loading';
 import { LogList } from '../log-list';
 import { Login } from '../login';
+import { UserProfile } from '../user-profile';
 import { ReportDetails } from '../report-details';
 import { ReportList } from '../report-list';
 
-import { pipeline, loadWith, ifLoggedInRedirectTo, authorize, queryLogs, queryReports, getReport } from './pipelines';
+import { pipeline, loadWith, ifLoggedInRedirectTo, getUserId, getUserProfile, queryLogs, queryReports, getReport } from './pipelines';
 
 export type RouteParams = Record<string, string>;
 
@@ -18,20 +19,24 @@ export function initializeRouter() {
 
   const content = document.querySelector('#content');
   const loading = loadWith(content);
+  const authorize = getUserId('userId');
 
   m.route(content, '/', {
     '/': redirectTo('/reports'),
     '/login': {
       onmatch: pipeline([loading, ifLoggedInRedirectTo('/')], load(Login))
     },
+    '/profile': {
+      onmatch: pipeline([loading, authorize, getUserProfile('profile')], load(UserProfile, 'profile'))
+    },
     '/logs': {
-      onmatch: pipeline([loading, authorize, queryLogs], load(LogList, 'logs'))
+      onmatch: pipeline([loading, authorize, queryLogs('logs')], load(LogList, 'logs'))
     },
     '/reports': {
-      onmatch: pipeline([loading, authorize, queryReports], load(ReportList, 'reports'))
+      onmatch: pipeline([loading, authorize, queryReports('reports')], load(ReportList, 'reports'))
     },
     '/reports/:reportId': {
-      onmatch: pipeline([loading, authorize, getReport], load(ReportDetails, 'report'))
+      onmatch: pipeline([loading, authorize, getReport('report')], load(ReportDetails, 'report'))
     },
     '/:url': NotFound
   });
