@@ -2,6 +2,9 @@
   "database": {
     "rules": "firebase.rules.bolt"
   },
+  "functions": {
+    "source": "functions"
+  },
   "hosting": {
     "public": "build",
     "rewrites": [

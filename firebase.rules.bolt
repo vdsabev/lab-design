@@ -8,8 +8,8 @@ path /indicators/{indicatorId} is Indicator {
 }
 
 type Indicator {
-  name: String,
-  unit: String,
+  name: String
+  unit: String
   reference: Reference
 }
 
@@ -20,8 +20,9 @@ path /logs/{userId} is Log[] {
 }
 
 type Log {
-  date: InitialTimestamp,
-  text: String,
+  date: InitialTimestamp
+  text: String
+  indicators: Number[]
 }
 
 // Reference
@@ -30,7 +31,7 @@ path /references/{userId} is Reference[] {
 }
 
 type Reference {
-  min: Number,
+  min: Number
   max: Number
 }
 
@@ -40,13 +41,9 @@ path /reports/{userId} is Report[] {
 }
 
 type Report {
-  date: InitialTimestamp,
-  text: String,
-  indicators: ReportIndicator[]
-}
-
-type ReportIndicator {
-  value: Number
+  date: InitialTimestamp
+  text: String
+  indicators: Number[]
 }
 
 // User
@@ -56,12 +53,18 @@ path /users/{userId} is User {
 }
 
 type User {
-  name: String,
+  name: String
   imageUrl: String | Null
   gender: Gender
 
   // TODO: Move to a private object
-  birthdate: PastTimestamp,
+  birthdate: PastTimestamp
+  indicators: UserIndicator[]
+}
+
+type UserIndicator {
+  date: Number
+  value: Number
 }
 
 // Misc

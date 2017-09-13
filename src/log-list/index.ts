@@ -15,7 +15,8 @@ export const LogList: Component<HTMLDivElement & { logs: Log[] }, null> = {
 const LogItem = (log: Log) => (
   div({ class: 'log-list-item mb-md pb-md' }, [
     h4(log.id),
-    log.description,
+    log.text,
+    Object.keys(log.indicators || {}).map((indicatorId) => div(`${indicatorId}: ${log.indicators[indicatorId]}`)),
     Timeago(new Date(<number>log.date))
   ])
 );

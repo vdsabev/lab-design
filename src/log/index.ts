@@ -5,5 +5,6 @@ export interface Log {
   id: string;
 
   date: number | Object;
-  description: string;
+  text: string;
+  indicators: Record<string, number>;
 }

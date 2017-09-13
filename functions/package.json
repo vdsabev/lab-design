@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "name": "lab-design-functions",
+  "description": "Cloud Functions for Firebase",
+  "dependencies": {
+    "firebase-admin": "5.2.1",
+    "firebase-functions": "0.6.3",
+    "var": "0.3.1"
+  }
+}

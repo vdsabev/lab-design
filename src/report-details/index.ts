@@ -51,7 +51,7 @@ export const ReportDetails: FactoryComponent<HTMLDivElement & { report: Report }
     view: () => (
       div({ class: 'container fade-in-animation' }, [
         h1({ class: 'mb-md' }, report.id),
-        div({ class: 'mb-md' }, report.description),
+        div({ class: 'mb-md' }, report.text),
         div({ class: 'mb-lg' }, [
           Timeago(new Date(<number>report.date))
         ]),

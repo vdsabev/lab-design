@@ -8,7 +8,7 @@ export const ReportList: Component<Partial<HTMLDivElement> & { reports: Report[]
     div({ class: 'container' }, reports.map((report) =>
       a({ oncreate: route.link, href: `/reports/${report.id}` }, [
         h4(report.id),
-        report.description
+        report.text
       ])
     ))
   )
