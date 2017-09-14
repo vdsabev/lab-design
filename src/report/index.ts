@@ -1,5 +1,3 @@
-import { Indicator } from '../indicator';
-
 import * as Services from './services';
 export const ReportServices = Services;
 
@@ -8,5 +6,5 @@ export interface Report {
 
   date: number | Object;
   text: string;
-  indicators: Record<string, Indicator>;
+  indicators: Record<string, number>;
 }

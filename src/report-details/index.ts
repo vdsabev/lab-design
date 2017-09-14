@@ -17,10 +17,11 @@ export const ReportDetails: FactoryComponent<HTMLDivElement & { report: Report }
   let lowestValueMultiplier = 0;
   let highestValueMultiplier = 0;
 
-  const loadIndicators = (indicators: Record<string, Indicator>) => {
-    Object.keys(indicators).forEach(async (indicatorId) => {
+  const indicators: Record<string, Indicator> = {};
+  const loadIndicators = () => {
+    Object.keys(report.indicators).forEach(async (indicatorId) => {
       const indicator = await IndicatorServices.get(indicatorId);
-      const reportIndicator = report.indicators[indicatorId] = { ...indicator, ...indicators[indicatorId] };
+      const reportIndicator = indicators[indicatorId] = { ...indicator, value: report.indicators[indicatorId] };
       updateMultipliers(reportIndicator);
       redraw();
     });
@@ -44,8 +45,7 @@ export const ReportDetails: FactoryComponent<HTMLDivElement & { report: Report }
     }
   };
 
-  loadIndicators(report.indicators);
-  report.indicators = {};
+  loadIndicators();
 
   return {
     view: () => (
@@ -56,7 +56,7 @@ export const ReportDetails: FactoryComponent<HTMLDivElement & { report: Report }
           Timeago(new Date(<number>report.date))
         ]),
         div({ class: 'report-details' },
-          Object.keys(report.indicators).map((indicatorId) => ReportIndicator(report.indicators[indicatorId], { lowestValueMultiplier, highestValueMultiplier }))
+          Object.keys(indicators).map((indicatorId) => ReportIndicator(indicators[indicatorId], { lowestValueMultiplier, highestValueMultiplier }))
         )
       ])
     )
