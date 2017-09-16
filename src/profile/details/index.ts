@@ -1,22 +1,23 @@
 import { div, h2 } from 'compote/html';
-import { Timeago } from 'compote/components/timeago';
-import { Component } from 'mithril';
+import * as m from 'mithril';
 
 import { Profile } from '../index';
-import { toArray } from '../../utils';
+import { IndicatorList } from '../../indicator';
 
 interface Attrs extends Partial<HTMLDivElement> {
   profile: Profile;
 }
 
-export const ProfileDetails: Component<Attrs, null> = {
+export const ProfileDetails: m.Component<Attrs, null> = {
   view: ({ attrs: { profile } }) => (
     div({ class: 'container' }, [
       h2(profile.name),
-      toArray(profile.indicators).map((indicator) => [
-        div(`${indicator.id}: ${indicator.value}`),
-        Timeago(new Date(<number>indicator.date))
-      ])
+      m(IndicatorList, {
+        indicators: Object.keys(profile.indicators).reduce((indicators, indicatorId) => ({
+          ...indicators,
+          [indicatorId]: profile.indicators[indicatorId].value
+        }), {})
+      })
     ])
   )
 };

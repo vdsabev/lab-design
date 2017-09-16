@@ -1,34 +1,34 @@
 @import '../../style/variables';
 @import '../../style/mixins';
 
-$report-indicator-bar-height: 24px;
+$indicator-bar-height: 24px;
 
-.report-details {
+.indicators {
   display: grid;
   grid-template-columns: auto auto 1fr;
   grid-gap: 2 * $spacing;
 }
 
-.report-indicator-bar-container {
+.indicator-bar-container {
   position: relative;
-  height: $report-indicator-bar-height;
+  height: $indicator-bar-height;
 }
 
 @media (max-width: $sm-max) {
-  .report-details {
+  .indicators {
     grid-template-columns: 1fr auto;
     grid-gap: $spacing;
   }
 
-  .report-indicator-name {
+  .indicator-name {
     grid-column: 1;
   }
 
-  .report-indicator-unit {
+  .indicator-unit {
     grid-column: 2;
   }
 
-  .report-indicator-bar-container {
+  .indicator-bar-container {
     grid-column: 1 / -1;
     margin-bottom: 2 * $spacing;
 
@@ -42,7 +42,7 @@ $report-indicator-bar-height: 24px;
   }
 }
 
-.report-indicator-bar {
+.indicator-bar {
   color: $neutral-light;
 
   &.background {
@@ -93,8 +93,8 @@ $report-indicator-bar-height: 24px;
     cursor: default;
     margin: 5px 0;
     background: inherit;
-    height: $report-indicator-bar-height;
+    height: $indicator-bar-height;
     padding: 0 5px;
-    line-height: $report-indicator-bar-height;
+    line-height: $indicator-bar-height;
   }
 }
