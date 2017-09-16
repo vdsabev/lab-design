@@ -1,16 +1,6 @@
-import * as firebase from 'firebase/app';
+import { queryService, getService } from '../firebase';
 import { Log } from './index';
 
-import { DataSnapshot } from '../firebase';
+export const query = queryService<Log>(({ userId }) => `users/${userId}/logs`);
 
-export const query = async (userId: string): Promise<Log[]> => {
-  const snapshot: DataSnapshot<Record<string, Log>> = await firebase.database().ref(`logs/${userId}`).once('value');
-  if (!snapshot) return null;
-  const result = snapshot.val();
-  return Object.keys(result).map((id) => ({ id, ...result[id] }));
-};
-
-export const get = async (userId: string, logId: string): Promise<Log> => {
-  const snapshot: DataSnapshot<Log> = await firebase.database().ref(`logs/${userId}/${logId}`).once('value');
-  return snapshot ? { id: logId, ...snapshot.val() } : null;
-};
+export const get = getService<Log>(({ userId, logId }) => `users/${userId}/logs/${logId}`);

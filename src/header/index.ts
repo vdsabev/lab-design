@@ -4,9 +4,9 @@ import { div, img, a } from 'compote/html';
 import { flex } from 'compote/components/flex';
 import { Component, route } from 'mithril';
 
+import { isLoggedIn } from '../auth';
 import { logout } from '../logout';
 import { store } from '../store';
-import { isLoggedIn } from '../user';
 
 export const Header: Component<Partial<HTMLDivElement>, null> = {
   view() {

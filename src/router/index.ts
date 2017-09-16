@@ -4,11 +4,11 @@ import { NotFound } from '../404-not-found';
 import { Loading } from '../loading';
 import { LogList } from '../log-list';
 import { Login } from '../login';
-import { UserProfile } from '../user-profile';
+import { ProfilePage } from '../profile';
 import { ReportDetails } from '../report-details';
 import { ReportList } from '../report-list';
 
-import { pipeline, loadWith, ifLoggedInRedirectTo, getUserId, getUserProfile, queryLogs, queryReports, getReport } from './pipelines';
+import { pipeline, loadWith, ifLoggedInRedirectTo, getUserId, getProfile, queryLogs, queryReports, getReport } from './pipelines';
 
 export type RouteParams = Record<string, string>;
 
@@ -27,7 +27,7 @@ export function initializeRouter() {
       onmatch: pipeline([loading, ifLoggedInRedirectTo('/')], load(Login))
     },
     '/profile': {
-      onmatch: pipeline([loading, authorize, getUserProfile('profile')], load(UserProfile, 'profile'))
+      onmatch: pipeline([loading, authorize, getProfile('profile')], load(ProfilePage, 'profile'))
     },
     '/logs': {
       onmatch: pipeline([loading, authorize, queryLogs('logs')], load(LogList, 'logs'))

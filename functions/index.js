@@ -4,6 +4,6 @@ const env = require('var');
 
 firebase.initializeApp(functions.config().firebase);
 
-const updateUserIndicators = require('./updateUserIndicators');
-exports.updateUserIndicatorsFromLog = functions.database.ref('/logs/{userId}/{logId}').onWrite(updateUserIndicators);
-exports.updateUserIndicatorsFromReport = functions.database.ref('/reports/{userId}/{reportId}').onWrite(updateUserIndicators);
+const updateProfileIndicators = require('./updateProfileIndicators');
+exports.updateProfileIndicatorsFromLog = functions.database.ref('/users/{userId}/logs/{logId}').onWrite(updateProfileIndicators);
+exports.updateProfileIndicatorsFromReport = functions.database.ref('/users/{userId}/reports/{reportId}').onWrite(updateProfileIndicators);

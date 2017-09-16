@@ -7,6 +7,7 @@ import { FactoryComponent, redraw } from 'mithril';
 
 import { Indicator, IndicatorServices } from '../indicator';
 import { Report } from '../report';
+import { toArray } from '../utils';
 
 interface Multipliers {
   lowestValueMultiplier: number;
@@ -20,7 +21,7 @@ export const ReportDetails: FactoryComponent<HTMLDivElement & { report: Report }
   const indicators: Record<string, Indicator> = {};
   const loadIndicators = () => {
     Object.keys(report.indicators).forEach(async (indicatorId) => {
-      const indicator = await IndicatorServices.get(indicatorId);
+      const indicator = await IndicatorServices.get({ indicatorId });
       const reportIndicator = indicators[indicatorId] = { ...indicator, value: report.indicators[indicatorId] };
       updateMultipliers(reportIndicator);
       redraw();
@@ -56,7 +57,7 @@ export const ReportDetails: FactoryComponent<HTMLDivElement & { report: Report }
           Timeago(new Date(<number>report.date))
         ]),
         div({ class: 'report-details' },
-          Object.keys(indicators).map((indicatorId) => ReportIndicator(indicators[indicatorId], { lowestValueMultiplier, highestValueMultiplier }))
+          toArray(indicators).map((indicator) => ReportIndicator(indicator, { lowestValueMultiplier, highestValueMultiplier }))
         )
       ])
     )

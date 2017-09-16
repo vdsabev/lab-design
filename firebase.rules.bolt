@@ -1,22 +1,35 @@
-// Indicator
+// Paths
 path /indicators {
   read() { true }
 }
 
-path /indicators/{indicatorId} is Indicator {
-  read() { true }
+path /indicators/{indicatorId} is Indicator;
+
+path /users/{userId}/logs is Log[] {
+  read() { isCurrentUser(userId) }
+  write() { isCurrentUser(userId) }
 }
 
+path /users/{userId}/profile is Profile {
+  read() { isCurrentUser(userId) }
+  write() { isCurrentUser(userId) }
+}
+
+path /users/{userId}/references is Reference[] {
+  read() { isCurrentUser(userId) }
+  write() { isCurrentUser(userId) }
+}
+
+path /users/{userId}/reports is Report[] {
+  read() { isCurrentUser(userId) }
+  write() { isCurrentUser(userId) }
+}
+
+// Types
 type Indicator {
   name: String
   unit: String
   reference: Reference
-}
-
-// Log
-path /logs/{userId} is Log[] {
-  read() { isCurrentUser(userId) }
-  write() { isCurrentUser(userId) }
 }
 
 type Log {
@@ -25,19 +38,23 @@ type Log {
   indicators: Number[]
 }
 
-// Reference
-path /references/{userId} is Reference[] {
-  read() { isCurrentUser(userId) }
+type Profile {
+  name: String
+  imageUrl: String | Null
+  gender: Gender
+
+  birthdate: PastTimestamp
+  indicators: ProfileIndicator[]
+}
+
+type ProfileIndicator {
+  date: Number
+  value: Number
 }
 
 type Reference {
   min: Number
   max: Number
-}
-
-// Report
-path /reports/{userId} is Report[] {
-  read() { isCurrentUser(userId) }
 }
 
 type Report {
@@ -46,29 +63,7 @@ type Report {
   indicators: Number[]
 }
 
-// User
-path /users/{userId} is User {
-  read() { true }
-  write() { isCurrentUser(userId) }
-}
-
-type User {
-  name: String
-  imageUrl: String | Null
-  gender: Gender
-
-  // TODO: Move to a private object
-  birthdate: PastTimestamp
-  indicators: UserIndicator[]
-}
-
-type UserIndicator {
-  date: Number
-  value: Number
-}
-
 // Misc
-// Types
 type InitialTimestamp extends Number {
   validate() { this == (prior(this) == null ? now : prior(this)) }
 }

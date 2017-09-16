@@ -2,8 +2,8 @@ import { logger } from 'compote/components/logger';
 import { route } from 'mithril';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 
+import { CurrentUser } from './auth';
 import { reloadRoute } from './router';
-import { CurrentUser } from './user';
 
 interface State {
   currentUser: CurrentUser;

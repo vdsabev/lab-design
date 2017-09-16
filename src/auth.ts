@@ -3,8 +3,9 @@ import 'firebase/auth';
 
 import * as notify from './notify';
 import { Actions, store } from './store';
-import { UserServices } from './user';
+import { Profile, ProfileServices } from './profile';
 
+// Auth
 let initialUserAuthResolver: { resolve: Function, done?: boolean };
 export const initialUserAuth = new Promise<firebase.User>((resolve) => initialUserAuthResolver = { resolve });
 
@@ -20,16 +21,24 @@ export function initializeAuth() {
 
     if (!auth) return;
 
-    loadUserProfile(auth.uid);
+    loadProfile(auth.uid);
   });
 }
 
-const loadUserProfile = async (id: string) => {
+const loadProfile = async (userId: string) => {
   try {
-    const profile = await UserServices.getProfile(id);
+    const profile = await ProfileServices.getProfile({ userId });
     store.dispatch({ type: Actions.USER_PROFILE_LOADED, profile });
   }
   catch (error) {
     notify.error(error);
   }
 };
+
+// Current User
+export interface CurrentUser {
+  auth: firebase.User;
+  profile: Profile;
+}
+
+export const isLoggedIn = (currentUser: CurrentUser) => currentUser != null && currentUser.auth != null && currentUser.auth.uid != null;

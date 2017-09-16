@@ -4,11 +4,12 @@ import { Unauthorized } from '../401-unauthorized';
 import { NotFound } from '../404-not-found';
 import { Loading } from '../loading';
 
-import { initialUserAuth } from '../auth';
+import { initialUserAuth, isLoggedIn } from '../auth';
 import { Log, LogServices } from '../log';
+import * as notify from '../notify';
+import { Profile, ProfileServices } from '../profile';
 import { Report, ReportServices } from '../report';
 import { store } from '../store';
-import { UserProfile, UserServices, isLoggedIn } from '../user';
 
 import { RouteParams, Component } from './index';
 
@@ -47,9 +48,9 @@ export const getUserId = (key: string): PipelineStep => ({
   onError: () => Unauthorized
 });
 
-export const getUserProfile = (key: string): PipelineStep => ({
-  async getState({ userId }): Promise<Record<string, UserProfile>> {
-    const profile = await UserServices.getProfile(userId);
+export const getProfile = (key: string): PipelineStep => ({
+  async getState({ userId }): Promise<Record<string, Profile>> {
+    const profile = await ProfileServices.getProfile({ userId });
     return { [key]: profile };
   },
   onError: () => NotFound // TODO: Handle other errors
@@ -57,7 +58,7 @@ export const getUserProfile = (key: string): PipelineStep => ({
 
 export const queryLogs = (key: string): PipelineStep => ({
   async getState({ userId }): Promise<Record<string, Log[]>> {
-    const logs = await LogServices.query(userId);
+    const logs = await LogServices.query({ userId });
     return { [key]: logs };
   },
   onError: () => NotFound // TODO: Handle other errors
@@ -65,7 +66,7 @@ export const queryLogs = (key: string): PipelineStep => ({
 
 export const queryReports = (key: string): PipelineStep => ({
   async getState({ userId }): Promise<Record<string, Report[]>> {
-    const reports = await ReportServices.query(userId);
+    const reports = await ReportServices.query({ userId });
     return { [key]: reports };
   },
   onError: () => NotFound // TODO: Handle other errors
@@ -73,7 +74,7 @@ export const queryReports = (key: string): PipelineStep => ({
 
 export const getReport = (key: string): PipelineStep => ({
   async getState({ userId }, { reportId }): Promise<Record<string, Report>> {
-    const report = await ReportServices.get(userId, reportId);
+    const report = await ReportServices.get({ userId, reportId });
     return { [key]: report };
   },
   onError: () => NotFound // TODO: Handle other errors
@@ -92,6 +93,7 @@ export const pipeline = (steps: PipelineStep[], componentFn: PipelineStepHandler
         }
       }
       catch (error) {
+        notify.error(error);
         return step.onError(state, params);
       }
     }
