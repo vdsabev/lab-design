@@ -12,5 +12,5 @@ module.exports = (event) => {
     };
   });
 
-  return event.data.ref.root.child(`users/${userId}/indicators`).update(indicators);
+  return event.data.ref.root.child(`users/${userId}/profile/indicators`).update(indicators);
 };
