@@ -2,11 +2,10 @@ import * as m from 'mithril';
 
 import { NotFound } from '../404-not-found';
 import { Loading } from '../loading';
-import { LogList } from '../log-list';
+import { LogList } from '../log';
 import { Login } from '../login';
-import { ProfilePage } from '../profile';
-import { ReportDetails } from '../report-details';
-import { ReportList } from '../report-list';
+import { ProfileDetails } from '../profile';
+import { ReportDetails, ReportList } from '../report';
 
 import { pipeline, loadWith, ifLoggedInRedirectTo, getUserId, getProfile, queryLogs, queryReports, getReport } from './pipelines';
 
@@ -27,7 +26,7 @@ export function initializeRouter() {
       onmatch: pipeline([loading, ifLoggedInRedirectTo('/')], load(Login))
     },
     '/profile': {
-      onmatch: pipeline([loading, authorize, getProfile('profile')], load(ProfilePage, 'profile'))
+      onmatch: pipeline([loading, authorize, getProfile('profile')], load(ProfileDetails, 'profile'))
     },
     '/logs': {
       onmatch: pipeline([loading, authorize, queryLogs('logs')], load(LogList, 'logs'))

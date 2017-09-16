@@ -5,16 +5,20 @@ import { Timeago } from 'compote/components/timeago';
 import { classy } from 'compote/components/utils';
 import { FactoryComponent, redraw } from 'mithril';
 
-import { Indicator, IndicatorServices } from '../indicator';
-import { Report } from '../report';
-import { toArray } from '../utils';
+import { Report } from '../index';
+import { Indicator, IndicatorServices } from '../../indicator';
+import { toArray } from '../../utils';
 
 interface Multipliers {
   lowestValueMultiplier: number;
   highestValueMultiplier: number;
 }
 
-export const ReportDetails: FactoryComponent<HTMLDivElement & { report: Report }> = ({ attrs: { report } }) => {
+interface Attrs extends Partial<HTMLDivElement> {
+  report: Report;
+}
+
+export const ReportDetails: FactoryComponent<Attrs> = ({ attrs: { report } }) => {
   let lowestValueMultiplier = 0;
   let highestValueMultiplier = 0;
 

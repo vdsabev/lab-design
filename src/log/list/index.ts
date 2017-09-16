@@ -4,9 +4,13 @@ import { div, h4 } from 'compote/html';
 import { Timeago } from 'compote/components/timeago';
 import { Component } from 'mithril';
 
-import { Log } from '../log';
+import { Log } from '../index';
 
-export const LogList: Component<HTMLDivElement & { logs: Log[] }, null> = {
+interface Attrs extends Partial<HTMLDivElement> {
+  logs: Log[];
+}
+
+export const LogList: Component<Attrs, null> = {
   view: ({ attrs: { logs } }) => (
     div({ class: 'container' }, logs.map(LogItem))
   )

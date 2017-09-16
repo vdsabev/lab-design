@@ -1,9 +1,13 @@
 import { div, a, h4 } from 'compote/html';
 import { Component, route } from 'mithril';
 
-import { Report } from '../report';
+import { Report } from '../index';
 
-export const ReportList: Component<Partial<HTMLDivElement> & { reports: Report[] }, null> = {
+interface Attrs extends Partial<HTMLDivElement> {
+  reports: Report[];
+}
+
+export const ReportList: Component<Attrs, null> = {
   view: ({ attrs: { reports } }) => (
     div({ class: 'container' }, reports.map((report) =>
       a({ oncreate: route.link, href: `/reports/${report.id}` }, [
