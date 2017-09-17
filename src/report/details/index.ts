@@ -3,7 +3,7 @@ import { Timeago } from 'compote/components/timeago';
 import * as m from 'mithril';
 
 import { Report } from '../index';
-import { IndicatorList } from '../../indicator';
+import { ValueIndicator, IndicatorList } from '../../indicator';
 
 interface Attrs extends Partial<HTMLDivElement> {
   report: Report;
@@ -15,9 +15,16 @@ export const ReportDetails: m.Component<Attrs, null> = {
       h1({ class: 'mb-md' }, report.id),
       div({ class: 'mb-md' }, report.text),
       div({ class: 'mb-lg' }, [
-        Timeago(new Date(<number>report.date))
+        Timeago(new Date(report.date))
       ]),
-      m(IndicatorList, { indicators: report.indicators })
+      m(IndicatorList, { indicators: toValueIndicators(report.indicators) })
     ])
   )
 };
+
+const toValueIndicators = (reportIndicators: Record<string, number>): Record<string, ValueIndicator> =>
+  Object.keys(reportIndicators).reduce((indicators, indicatorId) => ({
+    ...indicators,
+    [indicatorId]: { value: reportIndicators[indicatorId] }
+  }), {})
+;

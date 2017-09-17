@@ -7,7 +7,7 @@ export const ReportServices = Services;
 export interface Report {
   id: string;
 
-  date: number | Object;
+  date: number;
   text: string;
   indicators: Record<string, number>;
 }

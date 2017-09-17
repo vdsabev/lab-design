@@ -1,14 +1,16 @@
 import './style.scss';
 
 import { div } from 'compote/html';
+import { Clock } from 'compote/components/clock';
 import { classy } from 'compote/components/utils';
 import { FactoryComponent, redraw } from 'mithril';
+import timeago from 'timeago.js';
 
 import { Indicator, IndicatorServices } from '../../indicator';
 import { toArray } from '../../utils';
 
 interface Attrs extends Partial<HTMLDivElement> {
-  indicators: Record<string, number>;
+  indicators: Record<string, Indicator>;
 }
 
 export const IndicatorList: FactoryComponent<Attrs> = ({ attrs: { indicators } }) => {
@@ -19,7 +21,7 @@ export const IndicatorList: FactoryComponent<Attrs> = ({ attrs: { indicators } }
   const indicatorsDetails: Record<string, Indicator> = {};
   Object.keys(indicators).forEach(async (indicatorId) => {
     const indicator = await IndicatorServices.get({ indicatorId });
-    const indicatorDetails = indicatorsDetails[indicatorId] = { ...indicator, value: indicators[indicatorId] };
+    const indicatorDetails = indicatorsDetails[indicatorId] = { ...indicator, ...indicators[indicatorId] };
     updateMultipliers(indicatorDetails);
     redraw();
   });
@@ -57,7 +59,14 @@ interface Multipliers {
 }
 
 const IndicatorItem = (indicator: Indicator, multipliers: Multipliers) => [
-  div({ class: 'indicator-name' }, indicator.name),
+  div({ class: 'indicator-name flex-row align-items-stretch' }, [
+    indicator.date != null ?
+      div({ title: timeago().format(new Date(indicator.date)) }, Clock(new Date(indicator.date)))
+      :
+      null
+    ,
+    indicator.name
+  ]),
   div({ class: 'indicator-unit' }, indicator.unit),
   div({ class: 'indicator-bar-container' }, [
     div({ class: 'indicator-bar background' }),

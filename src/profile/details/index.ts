@@ -12,12 +12,7 @@ export const ProfileDetails: m.Component<Attrs, null> = {
   view: ({ attrs: { profile } }) => (
     div({ class: 'container' }, [
       h2(profile.name),
-      m(IndicatorList, {
-        indicators: Object.keys(profile.indicators).reduce((indicators, indicatorId) => ({
-          ...indicators,
-          [indicatorId]: profile.indicators[indicatorId].value
-        }), {})
-      })
+      m(IndicatorList, { indicators: profile.indicators })
     ])
   )
 };

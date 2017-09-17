@@ -6,7 +6,7 @@ export const LogServices = Services;
 export interface Log {
   id: string;
 
-  date: number | Object;
+  date: number;
   text: string;
   indicators: Record<string, number>;
 }

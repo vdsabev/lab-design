@@ -21,6 +21,6 @@ const LogItem = (log: Log) => (
     h4(log.id),
     log.text,
     Object.keys(log.indicators || {}).map((indicatorId) => div(`${indicatorId}: ${log.indicators[indicatorId]}`)),
-    Timeago(new Date(<number>log.date))
+    Timeago(new Date(log.date))
   ])
 );

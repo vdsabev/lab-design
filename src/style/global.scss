@@ -55,6 +55,12 @@ textarea {
   resize: vertical;
 }
 
+// Display
+.hidden { display: none; }
+.inline { display: inline; }
+.block { display: block; }
+.inline-block { display: inline-block; }
+
 // Sizing
 .width-xxs { width: $size-xxs; };
 .width-xs { width: $size-xs; };
@@ -104,10 +110,6 @@ textarea {
 .br-xl { border-radius: $border-radius * 1.66; }
 .br-xxl { border-radius: $border-radius * 2; }
 .br-50p { border-radius: 50%; }
-
-.hidden {
-  display: none;
-}
 
 .pointer {
   cursor: pointer;
