@@ -25,6 +25,11 @@ path /users/{userId}/reports is Report[] {
   write() { isCurrentUser(userId) }
 }
 
+path /users/{userId}/timelines is Timeline[] {
+  read() { isCurrentUser(userId) }
+  write() { isCurrentUser(userId) }
+}
+
 // Types
 type Indicator {
   name: String
@@ -62,6 +67,8 @@ type Report {
   text: String
   indicators: Number[]
 }
+
+type Timeline extends Number[];
 
 // Misc
 type InitialTimestamp extends Number {

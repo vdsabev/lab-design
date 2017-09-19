@@ -6,11 +6,11 @@ import { classy } from 'compote/components/utils';
 import { FactoryComponent, redraw } from 'mithril';
 import timeago from 'timeago.js';
 
-import { Indicator, IndicatorServices } from '../../indicator';
+import { Indicator, ValueIndicator, IndicatorServices } from '../../indicator';
 import { toArray } from '../../utils';
 
 interface Attrs extends Partial<HTMLDivElement> {
-  indicators: Record<string, Indicator>;
+  indicators: Record<string, ValueIndicator>;
 }
 
 export const IndicatorList: FactoryComponent<Attrs> = ({ attrs: { indicators } }) => {
