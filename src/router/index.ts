@@ -6,6 +6,7 @@ import { LogList } from '../log';
 import { Login } from '../login';
 import { ProfileDetails } from '../profile';
 import { ReportDetails, ReportList } from '../report';
+import { Timeline } from '../timeline';
 
 import { pipeline, loadWith, ifLoggedInRedirectTo, getUserId, getProfile, queryLogs, queryReports, getReport } from './pipelines';
 
@@ -36,6 +37,9 @@ export function initializeRouter() {
     },
     '/reports/:reportId': {
       onmatch: pipeline([loading, authorize, getReport('report')], load(ReportDetails, 'report'))
+    },
+    '/timeline': {
+      onmatch: pipeline([loading, authorize], load(Timeline))
     },
     '/:url': NotFound
   });
