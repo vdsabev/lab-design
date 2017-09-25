@@ -26,7 +26,8 @@ interface Attrs extends Partial<HTMLDivElement> {
 const timelineOptions = {
   maxX: 1000,
   maxY: 500,
-  strokeWidth: 1,
+  strokeWidth: 2,
+  strokeOpacity: 0.8,
   radius: 2.5,
   viewBox: '',
   colors: ['red', 'green', 'blue', 'yellow', 'purple', 'brown'],
@@ -34,10 +35,10 @@ const timelineOptions = {
 };
 
 timelineOptions.viewBox = [
-  -(timelineOptions.radius + timelineOptions.strokeWidth),
-  timelineOptions.radius + timelineOptions.strokeWidth,
-  timelineOptions.maxX + 2 * (timelineOptions.radius + timelineOptions.strokeWidth),
-  timelineOptions.maxY + 2 * (timelineOptions.radius + timelineOptions.strokeWidth)
+  -timelineOptions.radius,
+  timelineOptions.radius,
+  timelineOptions.maxX + 2 * timelineOptions.radius,
+  timelineOptions.maxY + 2 * timelineOptions.radius
 ].join(' ');
 
 export const Timeline: FactoryComponent<Attrs> = ({ attrs }) => {
@@ -101,7 +102,7 @@ export const Timeline: FactoryComponent<Attrs> = ({ attrs }) => {
     view: () => (
       div({ class: 'container' }, [
         SelectIndicators(indicators, selectIndicator),
-        TimeLineChart(selectedIndicators, minDate, maxDate)
+        TimelineChart(selectedIndicators, minDate, maxDate)
       ])
     )
   };
@@ -118,28 +119,30 @@ const SelectIndicators = (indicators: IndicatorWithTimeline[], selectIndicator: 
   )
 );
 
-const TimeLineChart = (indicators: IndicatorWithTimeline[], minX: number, maxX: number) => (
+const TimelineChart = (indicators: IndicatorWithTimeline[], minX: number, maxX: number) => (
   // TODO: Type
-  svg(<any>{ width: '100%', viewBox: timelineOptions.viewBox }, [
-    line(<any>{ x1: 0, y1: '100%', x2: '100%', y2: '100%', stroke: 'black', 'stroke-width': timelineOptions.strokeWidth }),
-    line(<any>{ x1: 0, y1: '100%', x2: 0, y2: 0, stroke: 'black', 'stroke-width': timelineOptions.strokeWidth }),
+  svg(<any>{ width: '100%', viewBox: timelineOptions.viewBox, style: { shapeRendering: 'crispedges' } }, [
+    line(<any>{ x1: 0, y1: '100%', x2: '100%', y2: '100%', style: { stroke: 'black', strokeWidth: `${timelineOptions.strokeWidth}px` } }),
+    line(<any>{ x1: 0, y1: '100%', x2: 0, y2: 0, style: { stroke: 'black', strokeWidth: `${timelineOptions.strokeWidth}px` } }),
     indicators.map((indicator, indicatorIndex) =>
       indicator.timeline ? [
         path(<any>{
           fill: 'none',
-          stroke: timelineOptions.defaultColor,
-          'stroke-linejoin': 'round',
-          'stroke-width': timelineOptions.strokeWidth,
-          d: indicator.timeline.map((timeline, index) => {
-            const prefix = index === 0 ? 'M' : 'L';
+          style: {
+            stroke: timelineOptions.colors[indicatorIndex] || timelineOptions.defaultColor,
+            strokeOpacity: timelineOptions.strokeOpacity,
+            shapeRendering: 'auto',
+            strokeLinejoin: 'round',
+            strokeWidth: `${timelineOptions.strokeWidth}px`
+          },
+          d: indicator.timeline.map((timeline, timelineIndex) => {
+            const prefix = timelineIndex === 0 ? 'M' : 'L';
             return `${prefix}${timelineOptions.maxX * (minX - parseInt(timeline.id, 10)) / (minX - maxX)} ${timelineOptions.maxY * (indicator.reference.max - timeline.value) / (indicator.reference.max - indicator.reference.min)} `;
           }).join('')
         }),
         indicator.timeline.map((timeline) =>
           circle(<any>{
             fill: timelineOptions.colors[indicatorIndex] || timelineOptions.defaultColor,
-            stroke: timelineOptions.defaultColor,
-            'stroke-width': timelineOptions.strokeWidth,
             cx: timelineOptions.maxX * (minX - parseInt(timeline.id, 10)) / (minX - maxX),
             cy: timelineOptions.maxY * (indicator.reference.max - timeline.value) / (indicator.reference.max - indicator.reference.min),
             r: timelineOptions.radius
