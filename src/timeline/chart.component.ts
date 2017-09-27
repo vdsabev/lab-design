@@ -1,14 +1,15 @@
 import { svg, line, path, circle } from 'compote/html';
+import { TimelineChartSeries } from './chart.viewmodel';
 
 const timelineChartOptions = {
   xMax: 1000,
   yMax: 500,
   strokeWidth: 2,
   strokeOpacity: 0.8,
-  radius: 2.5,
+  radius: 3,
   viewBox: '',
-  colors: ['red', 'green', 'blue', 'yellow', 'purple', 'brown'],
-  defaultColor: 'black'
+  colors: ['red', 'green', 'blue', 'orange', 'purple', 'brown'],
+  pointFillColor: 'white'
 };
 
 timelineChartOptions.viewBox = [
@@ -18,8 +19,6 @@ timelineChartOptions.viewBox = [
   timelineChartOptions.yMax + 2 * timelineChartOptions.radius
 ].join(' ');
 
-export type TimelineChartSeries = { values: { x: number, y: number }[] };
-
 export const TimelineChart = (series: TimelineChartSeries[], options = timelineChartOptions) => (
   // TODO: Type
   svg(<any>{ width: '100%', viewBox: options.viewBox, style: { shapeRendering: 'crispedges' } }, [
@@ -27,10 +26,10 @@ export const TimelineChart = (series: TimelineChartSeries[], options = timelineC
     line(<any>{ x1: 0, y1: '100%', x2: 0, y2: 0, style: { stroke: 'black', strokeWidth: `${options.strokeWidth}px` } }),
     series.map((seriesItem, seriesItemIndex) => [
       path(<any>{
-        d: seriesItem.values.map((value, valueIndex) => `${valueIndex === 0 ? 'M' : 'L'}${timelineChartOptions.xMax * value.x} ${timelineChartOptions.yMax * value.y} `).join(''),
+        d: seriesItem.values.map((value, valueIndex) => `${valueIndex === 0 ? 'M' : 'L'}${options.xMax * value.x} ${options.yMax * value.y} `).join(''),
         fill: 'none',
         style: {
-          stroke: options.colors[seriesItemIndex] || options.defaultColor,
+          stroke: options.colors[seriesItemIndex % options.colors.length],
           strokeOpacity: options.strokeOpacity,
           shapeRendering: 'auto',
           strokeLinejoin: 'round',
@@ -39,10 +38,15 @@ export const TimelineChart = (series: TimelineChartSeries[], options = timelineC
       }),
       seriesItem.values.map((value) => (
         circle(<any>{
-          fill: options.colors[seriesItemIndex] || options.defaultColor,
-          cx: timelineChartOptions.xMax * value.x,
-          cy: timelineChartOptions.yMax * value.y,
-          r: options.radius
+          fill: options.pointFillColor,
+          cx: options.xMax * value.x,
+          cy: options.yMax * value.y,
+          r: options.radius,
+          style: {
+            shapeRendering: 'auto',
+            stroke: options.colors[seriesItemIndex % options.colors.length],
+            strokeWidth: `${options.strokeWidth}px`
+          }
         })
       ))
     ])

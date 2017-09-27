@@ -1,5 +1,5 @@
 import { queryService } from '../firebase';
-import { Timeline } from './index';
+import { Timeline } from './timeline.viewmodel';
 
 import { valueDictionaryToArray } from '../utils';
 
