@@ -10,7 +10,7 @@ interface Attrs extends Partial<HTMLDivElement> {
 }
 
 export const Timeline: FactoryComponent<Attrs> = ({ attrs }) => {
-  const vm = TimelineViewModel();
+  const vm: Readonly<TimelineViewModel> = new TimelineViewModel();
 
   vm.loadIndicators().then(redraw);
 
@@ -22,8 +22,8 @@ export const Timeline: FactoryComponent<Attrs> = ({ attrs }) => {
   return {
     view: () => (
       div({ class: 'container' }, [
-        SelectIndicators(vm.getIndicators(), indicatorChanged),
-        TimelineChart(vm.getSeries())
+        SelectIndicators(vm.indicators, indicatorChanged),
+        TimelineChart(vm.series)
       ])
     )
   };
