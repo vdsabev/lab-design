@@ -1,2 +1,2 @@
-export type TimelineChartSeries = { values: TimelineChartValue[] };
-type TimelineChartValue = { x: number, y: number };
+export type TimelineChartSeries = { values: TimelineChartValue[], label: string };
+type TimelineChartValue = { x: number, y: number, label: string };

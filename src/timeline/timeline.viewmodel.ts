@@ -42,8 +42,10 @@ export class TimelineViewModel {
     return indicators.map((indicator) => ({
       values: indicator.timeline.map((timeline) => ({
         x: (xMin - parseInt(timeline.id, 10)) / (xMin - xMax),
-        y: (indicator.reference.max - timeline.value) / (indicator.reference.max - indicator.reference.min)
-      }))
+        y: (indicator.reference.max - timeline.value) / (indicator.reference.max - indicator.reference.min),
+        label: `${timeline.value} ${indicator.unit}`
+      })),
+      label: indicator.name
     }));
   }
 
