@@ -17,12 +17,7 @@ const timelineChartOptions = {
   }
 };
 
-timelineChartOptions.viewBox = [
-  0,
-  0,
-  timelineChartOptions.xMax,
-  timelineChartOptions.yMax
-].join(' ');
+timelineChartOptions.viewBox = `0 0 ${timelineChartOptions.xMax} ${timelineChartOptions.yMax}`;
 
 // For a well-done example, see:
 // https://www.highcharts.com/demo/spline-irregular-time
