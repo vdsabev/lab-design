@@ -7,7 +7,7 @@ import { FactoryComponent, redraw } from 'mithril';
 import timeago from 'timeago.js';
 
 import { Indicator, ValueIndicator, IndicatorServices } from '../../indicator';
-import { toArray } from '../../utils';
+import { objectDictionaryToArray } from '../../utils';
 
 interface Attrs extends Partial<HTMLDivElement> {
   indicators: Record<string, ValueIndicator>;
@@ -47,7 +47,7 @@ export const IndicatorList: FactoryComponent<Attrs> = ({ attrs: { indicators } }
   return {
     view: () => (
       div({ class: 'indicators' },
-        toArray(indicatorsDetails).map((indicatorDetails) => IndicatorItem(indicatorDetails, { lowestValueMultiplier, highestValueMultiplier }))
+        objectDictionaryToArray(indicatorsDetails).map((indicatorDetails) => IndicatorItem(indicatorDetails, { lowestValueMultiplier, highestValueMultiplier }))
       )
     )
   };

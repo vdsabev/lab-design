@@ -35,7 +35,6 @@ export function currentUser(state: Partial<CurrentUser> = null, action: CurrentU
       route.set('/');
     }
     return {};
-  default:
-    return state;
   }
+  return state;
 }

@@ -97,6 +97,10 @@ textarea {
 }
 
 // Overflow
+.overflow-auto {
+  @include overflow(auto, auto);
+}
+
 .overflow-hidden {
   @include overflow(hidden, hidden);
 }

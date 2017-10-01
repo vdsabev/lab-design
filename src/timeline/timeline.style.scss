@@ -1,0 +1,6 @@
+@import '../style/variables';
+@import '../style/mixins';
+
+.timeline-indicators {
+  border: 1px solid $foreground-light;
+}

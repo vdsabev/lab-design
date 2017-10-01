@@ -1,8 +1,6 @@
 import * as firebase from 'firebase/app';
 import 'firebase/database';
 
-import { toArray } from './utils';
-
 export interface DataSnapshot<T> extends firebase.database.DataSnapshot {
   val(): T;
 }
@@ -20,13 +18,13 @@ export function initializeFirebaseApp(options = {
 
 type PathParams = Record<string, string>;
 
-export const queryService = <T extends { id: string }>(getPath: (params: PathParams) => string) => async (params: PathParams): Promise<T[]> => {
+export const queryService = <T extends { id: string }>(getPath: (params: PathParams) => string, toArray: (...args: any[]) => T[]) => async (params?: PathParams): Promise<T[]> => {
   const snapshot: DataSnapshot<Record<string, T>> = await firebase.database().ref(getPath(params)).once('value');
   if (!(snapshot && snapshot.exists())) return null;
   return toArray(snapshot.val());
 };
 
-export const getService = <T extends { id: string }>(getPath: (params: PathParams) => string) => async (params: PathParams): Promise<T> => {
+export const getService = <T extends { id: string }>(getPath: (params: PathParams) => string) => async (params?: PathParams): Promise<T> => {
   const snapshot: DataSnapshot<T> = await firebase.database().ref(getPath(params)).once('value');
   if (!(snapshot && snapshot.exists())) return null;
   return { id: snapshot.key, ...<any>snapshot.val() };

@@ -17,6 +17,7 @@ export const Header: Component<Partial<HTMLDivElement>, null> = {
         a({ class: 'menu-link pa-md', oncreate: route.link, href: '/profile' }, 'Profile'),
         a({ class: 'menu-link pa-md', oncreate: route.link, href: '/logs' }, 'Logs'),
         a({ class: 'menu-link pa-md', oncreate: route.link, href: '/reports' }, 'Reports'),
+        a({ class: 'menu-link pa-md', oncreate: route.link, href: '/timeline' }, 'Timeline'),
         div({ style: flex(1) }),
         currentUser != null ?
           isLoggedIn(currentUser) ? LogoutLink() : LoginLink()

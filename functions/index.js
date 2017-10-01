@@ -8,6 +8,7 @@ const logRef = functions.database.ref('/users/{userId}/logs/{logId}');
 const reportRef = functions.database.ref('/users/{userId}/reports/{reportId}');
 
 // Profile Indicators
+// TODO: Only update if the date is newer than the current one
 const getProfileIndicators = require('./getProfileIndicators');
 const updateProfileIndicators = ({ params: { userId }, data }) =>
   getProfileIndicators(data.val()).then((indicators) =>

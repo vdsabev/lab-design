@@ -13,20 +13,20 @@
     "deploy:quick": "npm run build && firebase deploy --only hosting"
   },
   "dependencies": {
-    "@types/mithril": "1.1.7",
-    "compote": "3.3.1",
-    "firebase": "4.3.0",
-    "mithril": "1.1.3",
+    "@types/mithril": "1.1.8",
+    "compote": "3.3.2",
+    "firebase": "4.4.0",
+    "mithril": "1.1.4",
     "redux": "3.7.2"
   },
   "devDependencies": {
     "@types/jest": "20.0.8",
     "autoprefixer": "7.1.4",
-    "clean-webpack-plugin": "0.1.16",
+    "clean-webpack-plugin": "0.1.17",
     "css-loader": "0.28.7",
     "extract-text-webpack-plugin": "3.0.0",
-    "file-loader": "0.11.2",
-    "firebase-tools": "3.10.0",
+    "file-loader": "1.1.3",
+    "firebase-tools": "3.12.0",
     "html-webpack-plugin": "2.30.1",
     "jest": "20.0.4",
     "node-sass": "4.5.3",
@@ -34,13 +34,13 @@
     "sass-loader": "6.0.6",
     "style-loader": "0.18.2",
     "ts-jest": "20.0.14",
-    "ts-loader": "2.3.4",
-    "typescript": "2.5.2",
+    "ts-loader": "2.3.7",
+    "typescript": "2.5.3",
     "var": "0.3.1",
-    "webpack": "3.5.6",
-    "webpack-dev-server": "2.7.1",
+    "webpack": "3.6.0",
+    "webpack-dev-server": "2.9.1",
     "webpack-null-plugin": "0.0.2",
-    "workbox-webpack-plugin": "2.0.0"
+    "workbox-webpack-plugin": "2.0.3"
   },
   "jest": {
     "collectCoverage": true,
