@@ -1,5 +1,3 @@
-import { svg, g, line, path, circle, rect, text } from 'compote/html';
-
 export type TimelineChartSeries = { values: TimelineChartValue[], label: string };
 type TimelineChartValue = { x: number, y: number, label: string };
 
@@ -24,20 +22,23 @@ timelineChartOptions.viewBox = `0 0 ${timelineChartOptions.xMax} ${timelineChart
 // For a well-done example, see:
 // https://www.highcharts.com/demo/spline-irregular-time
 export const TimelineChart = (series: TimelineChartSeries[], options = timelineChartOptions) => (
-  // TODO: Type
-  svg({ width: '100%', viewBox: options.viewBox, style: { shapeRendering: 'crispedges', overflow: 'visible' } } as any, [
-    line({ x1: 0, y1: '100%', x2: '100%', y2: '100%', style: { stroke: 'black', strokeWidth: `${options.strokeWidth}px` } } as any),
-    line({ x1: 0, y1: '100%', x2: 0, y2: 0, style: { stroke: 'black', strokeWidth: `${options.strokeWidth}px` } } as any),
+  m('svg', { width: '100%', viewBox: options.viewBox, style: { shapeRendering: 'crispedges', overflow: 'visible' } }, [
+    m('line', { x1: 0, y1: '100%', x2: '100%', y2: '100%', style: { stroke: 'black', strokeWidth: `${options.strokeWidth}px` } }),
+    m('line', { x1: 0, y1: '100%', x2: 0, y2: 0, style: { stroke: 'black', strokeWidth: `${options.strokeWidth}px` } }),
     series.map((seriesItem, seriesItemIndex) => [
-      seriesItem.values && seriesItem.values.length > 0 ? text({
-        oncreate(vnode: any) {
-          vnode.dom.style.transform = `translate(-${vnode.dom.getComputedTextLength() + 2 * options.tooltip.padding}px, ${options.tooltip.padding}px)`;
-        },
-        fill: options.colors[seriesItemIndex % options.colors.length],
-        x: options.xMax * seriesItem.values[0].x,
-        y: options.yMax * seriesItem.values[0].y
-      } as any, seriesItem.label) : null,
-      path({
+      seriesItem.values && seriesItem.values.length > 0 ?
+        m('text', {
+          oncreate(vnode: any) {
+            vnode.dom.style.transform = `translate(-${vnode.dom.getComputedTextLength() + 2 * options.tooltip.padding}px, ${options.tooltip.padding}px)`;
+          },
+          fill: options.colors[seriesItemIndex % options.colors.length],
+          x: options.xMax * seriesItem.values[0].x,
+          y: options.yMax * seriesItem.values[0].y
+        }, seriesItem.label)
+        :
+        null
+      ,
+      m('path', {
         d: seriesItem.values.map((value, valueIndex) => `${valueIndex === 0 ? 'M' : 'L'}${options.xMax * value.x} ${options.yMax * value.y} `).join(''),
         fill: 'none',
         style: {
@@ -47,10 +48,10 @@ export const TimelineChart = (series: TimelineChartSeries[], options = timelineC
           strokeLinejoin: 'round',
           strokeWidth: `${options.strokeWidth}px`
         }
-      } as any),
+      }),
       seriesItem.values.map((value, valueIndex) => [
-        g([
-          rect({
+        m('g', [
+          m('rect', {
             id: `timeline-chart-value-tooltip-${seriesItemIndex}-${valueIndex}`,
             fill: options.pointFillColor,
             x: options.xMax * value.x,
@@ -64,8 +65,8 @@ export const TimelineChart = (series: TimelineChartSeries[], options = timelineC
               stroke: options.colors[seriesItemIndex % options.colors.length],
               strokeWidth: `${options.strokeWidth}px`
             }
-          } as any),
-          text({
+          }),
+          m('text', {
             oncreate(vnode: any) {
               const tooltip: SVGRectElement = document.getElementById(`timeline-chart-value-tooltip-${seriesItemIndex}-${valueIndex}`) as any;
               if (tooltip) {
@@ -75,9 +76,9 @@ export const TimelineChart = (series: TimelineChartSeries[], options = timelineC
             fill: options.colors[seriesItemIndex % options.colors.length],
             x: options.xMax * value.x + options.tooltip.padding,
             y: options.yMax * value.y + options.tooltip.height - options.tooltip.padding
-          } as any, value.label)
+          }, value.label)
         ]),
-        circle({
+        m('circle', {
           fill: options.pointFillColor,
           cx: options.xMax * value.x,
           cy: options.yMax * value.y,
@@ -87,7 +88,7 @@ export const TimelineChart = (series: TimelineChartSeries[], options = timelineC
             stroke: options.colors[seriesItemIndex % options.colors.length],
             strokeWidth: `${options.strokeWidth}px`
           }
-        } as any)
+        })
       ])
     ])
   ])
