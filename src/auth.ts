@@ -1,9 +1,10 @@
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
 
-import * as notify from './notify';
-import { Actions, store } from './store';
-import { Profile, ProfileServices } from './profile';
+import { notify } from './alert';
+import { CurrentUserActions } from './current-user';
+import { store } from './store';
+import { ProfileServices } from './profile';
 
 // Auth
 let initialUserAuthResolver: { resolve: Function, done?: boolean };
@@ -11,7 +12,7 @@ export const initialUserAuth = new Promise<firebase.User>((resolve) => initialUs
 
 export function initializeAuth() {
   firebase.auth().onAuthStateChanged(async (auth: firebase.User) => {
-    const action = auth ? Actions.USER_LOGGED_IN : Actions.USER_LOGGED_OUT;
+    const action = auth ? CurrentUserActions.USER_LOGGED_IN : CurrentUserActions.USER_LOGGED_OUT;
     store.dispatch({ type: action, auth });
 
     if (!initialUserAuthResolver.done) {
@@ -28,20 +29,12 @@ export function initializeAuth() {
 const loadProfile = async (userId: string) => {
   try {
     const profile = await ProfileServices.getProfile({ userId });
-    store.dispatch({ type: Actions.USER_PROFILE_LOADED, profile });
+    store.dispatch({ type: CurrentUserActions.USER_PROFILE_LOADED, profile });
   }
   catch (error) {
     notify.error(error);
   }
 };
-
-// Current User
-export interface CurrentUser {
-  auth: firebase.User;
-  profile: Profile;
-}
-
-export const isLoggedIn = (currentUser: CurrentUser) => currentUser != null && currentUser.auth != null && currentUser.auth.uid != null;
 
 // Services
 export const AuthServices = {

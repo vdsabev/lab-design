@@ -3,16 +3,16 @@ import * as m from 'mithril';
 import { Unauthorized, NotFound } from '../pages';
 import { Loading } from '../loading';
 
-import { initialUserAuth, isLoggedIn } from '../auth';
+import { initialUserAuth } from '../auth';
+import { isLoggedIn } from '../current-user';
 import { Log, LogServices } from '../log';
-import * as notify from '../notify';
+import { notify } from '../alert';
 import { Profile, ProfileServices } from '../profile';
 import { Report, ReportServices } from '../report';
 import { store } from '../store';
 
 import { RouteParams } from './index';
 import { load } from './utils';
-
 
 interface PipelineStep {
   name: string;

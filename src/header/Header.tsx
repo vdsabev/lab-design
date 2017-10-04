@@ -3,7 +3,8 @@ import './Header.scss';
 import { flex } from 'compote/components/flex';
 import { route } from 'mithril';
 
-import { isLoggedIn, AuthServices } from '../auth';
+import { AuthServices } from '../auth';
+import { isLoggedIn } from '../current-user';
 import { store } from '../store';
 
 export const Header: FnComponent = () => ({
@@ -18,7 +19,7 @@ export const Header: FnComponent = () => ({
         <a class="menu-link pa-md" oncreate={route.link} href="/timeline">Timeline</a>
         <div style={flex(1)}></div>
         {currentUser != null ?
-          isLoggedIn(currentUser) ? LogoutLink() : LoginLink()
+          isLoggedIn(currentUser) ? LogoutLink() : LoginLinks()
           :
           null}
       </div>
@@ -26,7 +27,10 @@ export const Header: FnComponent = () => ({
   }
 });
 
-const LoginLink = () => <a class="color-neutral-lighter" oncreate={route.link} href="/login">Login</a>;
+const LoginLinks = () => [
+  <a class="color-neutral-lighter mr-md" oncreate={route.link} href="/register">Register</a>,
+  <a class="color-neutral-lighter" oncreate={route.link} href="/login">Login</a>
+];
 
 const LogoutLink = () => <a class="color-neutral-lighter" onclick={logout}>Logout</a>;
 

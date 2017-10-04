@@ -1,5 +1,5 @@
 import { Indicator, IndicatorServices } from '../indicator';
-import * as notify from '../notify';
+import { notify } from '../alert';
 import { store } from '../store';
 
 import { TimelineServices } from './index';
