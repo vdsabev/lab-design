@@ -12,7 +12,10 @@
     "baseUrl": "src",
     "lib": ["dom", "es5", "es2015"],
     "module": "commonjs",
-    "target": "es5"
+    "target": "es5",
+
+    "jsx": "react",
+    "jsxFactory": "m"
   },
   "exclude": [
     "node_modules"
