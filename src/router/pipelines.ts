@@ -11,6 +11,8 @@ import { Report, ReportServices } from '../report';
 import { store } from '../store';
 
 import { RouteParams } from './index';
+import { load } from './utils';
+
 
 interface PipelineStep {
   name: string;
@@ -48,7 +50,7 @@ export const getUserId = (key: string): PipelineStep => ({
     if (!isLoggedIn(currentUser)) throw new Error('Unauthorized');
     return { [key]: currentUser.auth.uid };
   },
-  onError: Unauthorized
+  onError: load(Unauthorized)
 });
 
 export const getProfile = (key: string): PipelineStep => ({
@@ -57,7 +59,7 @@ export const getProfile = (key: string): PipelineStep => ({
     const profile = await ProfileServices.getProfile({ userId });
     return { [key]: profile };
   },
-  onError: NotFound // TODO: Handle other errors
+  onError: load(NotFound) // TODO: Handle other errors
 });
 
 export const queryLogs = (key: string): PipelineStep => ({
@@ -66,7 +68,7 @@ export const queryLogs = (key: string): PipelineStep => ({
     const logs = await LogServices.query({ userId });
     return { [key]: logs };
   },
-  onError: NotFound // TODO: Handle other errors
+  onError: load(NotFound) // TODO: Handle other errors
 });
 
 export const queryReports = (key: string): PipelineStep => ({
@@ -75,7 +77,7 @@ export const queryReports = (key: string): PipelineStep => ({
     const reports = await ReportServices.query({ userId });
     return { [key]: reports };
   },
-  onError: NotFound // TODO: Handle other errors
+  onError: load(NotFound) // TODO: Handle other errors
 });
 
 export const getReport = (key: string): PipelineStep => ({
@@ -84,7 +86,7 @@ export const getReport = (key: string): PipelineStep => ({
     const report = await ReportServices.get({ userId, reportId });
     return { [key]: report };
   },
-  onError: NotFound // TODO: Handle other errors
+  onError: load(NotFound) // TODO: Handle other errors
 });
 
 export const pipeline = (steps: PipelineStep[], componentFn: PipelineStepHandler) => {
@@ -93,7 +95,6 @@ export const pipeline = (steps: PipelineStep[], componentFn: PipelineStepHandler
   return async (params: RouteParams): Promise<m.Component<any, any>> => {
     let state: PipelineState = {};
     for (const step of steps) {
-      console.log(`PIPELINE: ${step.name}`);
       try {
         const newState = await step.getState(state, params);
         if (newState) {
