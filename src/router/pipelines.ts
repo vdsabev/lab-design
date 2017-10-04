@@ -11,7 +11,7 @@ import { Profile, ProfileServices } from '../profile';
 import { Report, ReportServices } from '../report';
 import { store } from '../store';
 
-import { RouteParams } from './index';
+import { route, RouteParams } from './index';
 import { load } from './utils';
 
 interface PipelineStep {
@@ -38,7 +38,7 @@ export const ifLoggedInRedirectTo = (url: string): PipelineStep => ({
   async getState(): Promise<void> {
     await initialUserAuth;
     const { currentUser } = store.getState();
-    if (isLoggedIn(currentUser)) m.route.set(url);
+    if (isLoggedIn(currentUser)) route.set(url);
   }
 });
 

@@ -1,7 +1,7 @@
 import * as firebase from 'firebase/app';
 
 import { Profile } from './profile';
-import { route, reloadRoute } from './router';
+import { reloadRoute, route, Routes } from './router';
 
 // Entity
 export interface CurrentUser {
@@ -29,7 +29,7 @@ export function currentUser(state: Partial<CurrentUser> = null, action: CurrentU
     return { auth: action.auth };
   case CurrentUserActions.USER_LOGGED_OUT:
     if (state != null) {
-      route.set('/');
+      route.set(Routes.HOME);
     }
     return {};
   }

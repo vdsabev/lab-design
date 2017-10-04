@@ -1,8 +1,9 @@
 import { Keyboard } from 'compote/components/keyboard';
 import { constant, get, set, when, equal } from 'compote/components/utils';
-import { redraw, route, withAttr } from 'mithril';
+import { redraw, withAttr } from 'mithril';
 
 import { AuthServices } from '../auth';
+import { route, Routes } from '../router';
 
 interface Attrs {
   email?: string;
@@ -22,7 +23,7 @@ export const Login: FnComponent<Attrs> = () => {
     try {
       state.loading = true;
       await AuthServices.login(state.email, state.password);
-      route.set('/');
+      route.set(Routes.HOME);
     }
     catch (error) {
       state.loading = false;

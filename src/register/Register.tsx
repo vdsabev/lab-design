@@ -4,7 +4,7 @@ import * as firebase from 'firebase/app';
 import { redraw, withAttr } from 'mithril';
 
 import { notify } from '../alert';
-import { route } from '../router';
+import { route, Routes } from '../router';
 
 interface Attrs {
   email?: string;
@@ -31,7 +31,7 @@ export const Register: FnComponent<Attrs> = () => {
     try {
       state.loading = true;
       await firebase.auth().createUserWithEmailAndPassword(state.email, state.password);
-      route.set('/');
+      route.set(Routes.HOME);
     }
     catch (error) {
       notify.error(error);

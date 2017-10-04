@@ -17,6 +17,23 @@ export type RouteParams = Record<string, string>;
 
 export const route = m.route;
 
+export const Routes = {
+  HOME: '/',
+  LOGIN: '/login',
+  REGISTER: '/register',
+
+  PROFILE: '/profile',
+
+  LOG_LIST: '/logs',
+
+  REPORT_LIST: '/reports',
+  REPORT_DETAILS: (reportId: string) => `/reports/${reportId}`,
+
+  TIMELINE: '/timeline',
+
+  OTHER: (url: string) => `/${url}`
+};
+
 export function initializeRouter() {
   route.prefix('');
 
@@ -24,40 +41,40 @@ export function initializeRouter() {
   const loading = loadWith(content);
   const authorize = getUserId('userId');
 
-  route(content, '/', {
+  route(content, Routes.HOME, {
     // Home
-    '/': redirectTo('/reports'),
-    '/login': {
-      onmatch: pipeline([loading, ifLoggedInRedirectTo('/')], load(Login))
+    [Routes.HOME]: redirectTo(Routes.REPORT_LIST),
+    [Routes.LOGIN]: {
+      onmatch: pipeline([loading, ifLoggedInRedirectTo(Routes.HOME)], load(Login))
     },
-    '/register': {
-      onmatch: pipeline([loading, ifLoggedInRedirectTo('/')], load(Register))
+    [Routes.REGISTER]: {
+      onmatch: pipeline([loading, ifLoggedInRedirectTo(Routes.HOME)], load(Register))
     },
 
     // Profile
-    '/profile': {
+    [Routes.PROFILE]: {
       onmatch: pipeline([loading, authorize, getProfile('profile')], load(ProfileDetails, 'profile'))
     },
 
     // Logs
-    '/logs': {
+    [Routes.LOG_LIST]: {
       onmatch: pipeline([loading, authorize, queryLogs('logs')], load(LogList, 'logs'))
     },
 
     // Reports
-    '/reports': {
+    [Routes.REPORT_LIST]: {
       onmatch: pipeline([loading, authorize, queryReports('reports')], load(ReportList, 'reports'))
     },
-    '/reports/:reportId': {
+    [Routes.REPORT_DETAILS(':reportId')]: {
       onmatch: pipeline([loading, authorize, getReport('report')], load(ReportDetails, 'report'))
     },
 
     // Timeline
-    '/timeline': {
+    [Routes.TIMELINE]: {
       onmatch: pipeline([loading, authorize], load(Timeline))
     },
 
     // Misc
-    '/:url': NotFound
+    [Routes.OTHER(':url')]: NotFound
   });
 }

@@ -1,12 +1,14 @@
 import * as m from 'mithril';
+
 import { Loading } from '../loading';
+import { route } from './index';
 
 export const reloadRoute = () => {
-  m.route.set(window.location.href, undefined, { replace: true });
+  route.set(window.location.href, undefined, { replace: true });
 };
 
 export const redirectTo = (url: string) => () => {
-  m.route.set(url);
+  route.set(url);
   return { view: render(Loading) };
 };
 
