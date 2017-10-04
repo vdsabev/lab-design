@@ -1,19 +1,14 @@
-import './style.scss';
+import './IndicatorList.scss';
 
-import { div } from 'compote/html';
 import { Clock } from 'compote/components/clock';
 import { classy } from 'compote/components/utils';
-import { FactoryComponent, redraw } from 'mithril';
+import { redraw } from 'mithril';
 import timeago from 'timeago.js';
 
-import { Indicator, ValueIndicator, IndicatorServices } from '../../indicator';
-import { objectDictionaryToArray } from '../../utils';
+import { objectDictionaryToArray } from '../utils';
+import { Indicator, ValueIndicator, IndicatorServices } from './index';
 
-interface Attrs extends Partial<HTMLDivElement> {
-  indicators: Record<string, ValueIndicator>;
-}
-
-export const IndicatorList: FactoryComponent<Attrs> = ({ attrs: { indicators } }) => {
+export const IndicatorList: FnComponent<{ indicators: Record<string, ValueIndicator> }> = ({ attrs: { indicators } }) => {
   let lowestValueMultiplier = 0;
   let highestValueMultiplier = 0;
 
@@ -45,11 +40,10 @@ export const IndicatorList: FactoryComponent<Attrs> = ({ attrs: { indicators } }
   };
 
   return {
-    view: () => (
-      div({ class: 'indicators' },
-        objectDictionaryToArray(indicatorsDetails).map((indicatorDetails) => IndicatorItem(indicatorDetails, { lowestValueMultiplier, highestValueMultiplier }))
-      )
-    )
+    view: () =>
+      <div class="indicators">
+        {objectDictionaryToArray(indicatorsDetails).map((indicatorDetails) => IndicatorItem(indicatorDetails, { lowestValueMultiplier, highestValueMultiplier }))}
+      </div>
   };
 };
 
@@ -59,43 +53,46 @@ interface Multipliers {
 }
 
 const IndicatorItem = (indicator: Indicator, multipliers: Multipliers) => [
-  div({ class: 'indicator-name flex-row align-items-stretch' }, [
-    indicator.date != null ?
-      div({ title: timeago().format(new Date(indicator.date)) }, Clock(new Date(indicator.date)))
+  <div class="indicator-name flex-row align-items-stretch">
+    {indicator.date != null ?
+      <div title={timeago().format(new Date(indicator.date))}>
+        {Clock(new Date(indicator.date))}
+      </div>
       :
-      null
-    ,
-    indicator.name
-  ]),
-  div({ class: 'indicator-unit' }, indicator.unit),
-  div({ class: 'indicator-bar-container' }, [
-    div({ class: 'indicator-bar background' }),
+      null}
+    {indicator.name}
+  </div>,
 
-    div({
-      class: 'indicator-bar min-value flex-row justify-content-center align-items-stretch',
-      style: { left: getValuePosition(indicator.reference.min, indicator, multipliers) + '%' }
-    }, [
-      div({ class: 'value-number' }, formatNumber(indicator.reference.min))
-    ]),
+  <div class="indicator-unit">{indicator.unit}</div>,
 
-    div({
-      class: 'indicator-bar max-value flex-row justify-content-center align-items-stretch',
-      style: { left: getValuePosition(indicator.reference.max, indicator, multipliers) + '%' }
-    }, [
-      div({ class: 'value-number' }, formatNumber(indicator.reference.max))
-    ]),
+  <div class="indicator-bar-container">
+    <div class="indicator-bar background"></div>
 
-    div({
-      class: classy({
+    <div
+      class="indicator-bar min-value flex-row justify-content-center align-items-stretch"
+      style={{ left: getValuePosition(indicator.reference.min, indicator, multipliers) + '%' }}
+    >
+      <div class="value-number">{formatNumber(indicator.reference.min)}</div>
+    </div>
+
+    <div
+      class="indicator-bar max-value flex-row justify-content-center align-items-stretch"
+      style={{ left: getValuePosition(indicator.reference.max, indicator, multipliers) + '%' }}
+    >
+      <div class="value-number">{formatNumber(indicator.reference.max)}</div>
+    </div>
+
+    <div
+      class={classy({
         'indicator-bar value flex-row justify-content-center align-items-stretch': true,
         'low-value': indicator.value < indicator.reference.min,
         'high-value' : indicator.value > indicator.reference.max
-      }),
-      style: { left: getValuePosition(indicator.value, indicator, multipliers) + '%' }
-    }, [
-      div({ class: 'value-number' }, formatNumber(indicator.value))
-    ])
-  ])
+      })}
+      style={{ left: getValuePosition(indicator.value, indicator, multipliers) + '%' }}
+    >
+      <div class="value-number">{formatNumber(indicator.value)}</div>
+    </div>
+  </div>
 ];
 
 const getValuePosition = (

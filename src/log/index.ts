@@ -1,4 +1,4 @@
-export * from './list';
+export * from './LogList';
 
 import * as Services from './services';
 export const LogServices = Services;

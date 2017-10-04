@@ -1,5 +1,8 @@
 import { Hyperscript, Vnode, Component, Children, Lifecycle } from 'mithril';
 
+// TODO: Allow using stateless components with JSX
+// TODO: Validate component property types
+// TODO: Fix SVG elements types
 declare global {
   const process: {
     env: Record<string, any>;
@@ -11,14 +14,15 @@ declare global {
 
   const m: Hyperscript;
 
-  interface FnComponent<ElementAttrs, ComponentAttrs = {}> {
-    (vnode: Vnode<Partial<ElementAttrs> & ComponentAttrs, {}>): Component<Partial<ElementAttrs> & ComponentAttrs, {}>;
+  interface FnComponent<ComponentAttrs = {}, ElementAttrs = HTMLDivElement> {
+    (vnode: Vnode<ComponentAttrs & Partial<ElementAttrs>, null>): Component<ComponentAttrs & Partial<ElementAttrs>, null>;
   }
 
+  // https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/react/index.d.ts
   namespace JSX {
-    export type Element = Children | null | void;
+    type Element = Children | null | void;
 
-    export type IntrinsicElements<TagName extends keyof ElementTagNameMap> = {
+    type IntrinsicElements<TagName extends keyof ElementTagNameMap> = {
       [T in TagName]: RecursivePartial<ElementTagNameMap[T]> & Attributes<ElementTagNameMap[T], any>
     };
 

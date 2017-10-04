@@ -1,9 +1,7 @@
+export * from './IndicatorList';
+export * from './services';
+
 import { Reference } from '../reference';
-
-export * from './list';
-
-import * as Services from './services';
-export const IndicatorServices = Services;
 
 export interface Indicator extends ValueIndicator {
   name: string;

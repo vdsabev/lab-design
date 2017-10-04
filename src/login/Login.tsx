@@ -1,11 +1,10 @@
 import { Keyboard } from 'compote/components/keyboard';
 import { constant, get, set, when, equal } from 'compote/components/utils';
-import * as firebase from 'firebase/app';
 import { redraw, route, withAttr } from 'mithril';
 
-import * as notify from '../notify';
+import { AuthServices } from '../auth';
 
-interface State {
+interface Attrs {
   email?: string;
   password?: string;
   loading?: boolean;
@@ -13,20 +12,19 @@ interface State {
 
 // TODO: Use form data
 // TODO: Add validation
-export const Login: FnComponent<HTMLDivElement, State> = () => {
-  const state: State = {};
+export const Login: FnComponent<Attrs> = () => {
+  const state: Attrs = {};
 
-  const setEmail = withAttr('value', set<State>('email')(state));
-  const setPassword = withAttr('value', set<State>('password')(state));
+  const setEmail = withAttr('value', set<Attrs>('email')(state));
+  const setPassword = withAttr('value', set<Attrs>('password')(state));
 
   const login = async () => {
     try {
       state.loading = true;
-      await firebase.auth().signInWithEmailAndPassword(state.email, state.password);
+      await AuthServices.login(state.email, state.password);
       route.set('/');
     }
     catch (error) {
-      notify.error(error);
       state.loading = false;
       redraw();
     }

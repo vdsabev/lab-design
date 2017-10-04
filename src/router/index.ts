@@ -1,6 +1,6 @@
 import * as m from 'mithril';
 
-import { NotFound } from '../404-not-found';
+import { NotFound } from '../pages';
 import { Loading } from '../loading';
 import { LogList } from '../log';
 import { Login } from '../login';
@@ -11,8 +11,6 @@ import { Timeline } from '../timeline';
 import { pipeline, loadWith, ifLoggedInRedirectTo, getUserId, getProfile, queryLogs, queryReports, getReport } from './pipelines';
 
 export type RouteParams = Record<string, string>;
-
-export type Component<A = any, S = any> = m.FactoryComponent<A> | m.Component<A, S>;
 
 export function initializeRouter() {
   m.route.prefix('');
@@ -51,11 +49,11 @@ export const reloadRoute = () => {
 
 const redirectTo = (url: string) => () => {
   m.route.set(url);
-  return Loading;
+  return { view: render(Loading) };
 };
 
-const load = <T>(component: Component, key?: keyof T) => (result?: T) => ({
+const load = <T>(component: FnComponent<any, any>, key?: keyof T) => (result?: T) => ({
   view: render(component, key != null && result != null ? { [key]: result[key] } : null)
 });
 
-const render = (component: Component, ...args: any[]) => () => m(component, ...args);
+const render = (component: FnComponent<any, any>, ...args: any[]) => () => m(component, ...args);

@@ -1,13 +1,12 @@
-import './header.style.scss';
+import './Header.scss';
 
 import { flex } from 'compote/components/flex';
 import { route } from 'mithril';
 
-import { isLoggedIn } from '../auth';
-import { logout } from '../logout';
+import { isLoggedIn, AuthServices } from '../auth';
 import { store } from '../store';
 
-export const Header: FnComponent<HTMLDivElement> = () => ({
+export const Header: FnComponent = () => ({
   view() {
     const { currentUser } = store.getState();
     return (
@@ -19,7 +18,7 @@ export const Header: FnComponent<HTMLDivElement> = () => ({
         <a class="menu-link pa-md" oncreate={route.link} href="/timeline">Timeline</a>
         <div style={flex(1)}></div>
         {currentUser != null ?
-          isLoggedIn(currentUser) ? <LogoutLink /> : <LoginLink />
+          isLoggedIn(currentUser) ? LogoutLink() : LoginLink()
           :
           null}
       </div>
@@ -27,10 +26,8 @@ export const Header: FnComponent<HTMLDivElement> = () => ({
   }
 });
 
-const LoginLink: FnComponent<HTMLAnchorElement> = () => ({
-  view: () => <a class="color-neutral-lighter" oncreate={route.link} href="/login">Login</a>
-});
+const LoginLink = () => <a class="color-neutral-lighter" oncreate={route.link} href="/login">Login</a>;
 
-const LogoutLink: FnComponent<HTMLAnchorElement> = () => ({
-  view: () => <a class="color-neutral-lighter" onclick={logout}>Logout</a>
-});
+const LogoutLink = () => <a class="color-neutral-lighter" onclick={logout}>Logout</a>;
+
+const logout = () => AuthServices.logout().then(() => route.set('/login'));
