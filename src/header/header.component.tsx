@@ -27,7 +27,7 @@ export const Header: FnComponent<HTMLDivElement> = () => ({
   }
 });
 
-const LoginLink: FnComponent<HTMLAnchorElement, { a: number }> = () => ({
+const LoginLink: FnComponent<HTMLAnchorElement> = () => ({
   view: () => <a class="color-neutral-lighter" oncreate={route.link} href="/login">Login</a>
 });
 

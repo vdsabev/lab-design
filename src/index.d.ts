@@ -1,29 +1,35 @@
-/// <reference types="mithril" />
+import { Hyperscript, Vnode, Component, Children, Lifecycle } from 'mithril';
 
-declare const process: Process;
+declare global {
+  const process: {
+    env: Record<string, any>;
+  };
 
-interface Process {
-  env: Record<string, any>;
-}
-
-interface Action<ActionType> {
-  type?: ActionType;
-}
-
-declare const m: Mithril.Hyperscript;
-
-interface FnComponent<ElementAttrs, ComponentAttrs = {}> {
-	(vnode: Mithril.Vnode<Partial<ElementAttrs> & ComponentAttrs, {}>): Mithril.Component<Partial<ElementAttrs> & ComponentAttrs, {}>;
-}
-
-declare namespace JSX {
-  export type Element = Mithril.Children | null | void;
-
-  export type IntrinsicElements<TagName extends keyof ElementTagNameMap> = {
-    [T in TagName]: RecursivePartial<ElementTagNameMap[T]> & Partial<Mithril.Lifecycle<any, any>>;
+  interface Action<ActionType> {
+    type?: ActionType;
   }
 
-  type RecursivePartial<T> = {
-    [P in keyof T]?: RecursivePartial<T[P]>;
+  const m: Hyperscript;
+
+  interface FnComponent<ElementAttrs, ComponentAttrs = {}> {
+    (vnode: Vnode<Partial<ElementAttrs> & ComponentAttrs, {}>): Component<Partial<ElementAttrs> & ComponentAttrs, {}>;
+  }
+
+  namespace JSX {
+    export type Element = Children | null | void;
+
+    export type IntrinsicElements<TagName extends keyof ElementTagNameMap> = {
+      [T in TagName]: RecursivePartial<ElementTagNameMap[T]> & Attributes<ElementTagNameMap[T], any>
+    };
+
+    type RecursivePartial<T> = {
+      [P in keyof T]?: RecursivePartial<T[P]>
+    };
+
+    interface Attributes<Attrs, State> extends Lifecycle<Attrs, State> {
+      className?: string;
+      class?: string;
+      key?: string | number;
+    }
   }
 }
