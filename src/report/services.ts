@@ -1,8 +1,9 @@
 import { queryService, getService } from '../firebase';
-import { Report } from './index';
-
 import { objectDictionaryToArray } from '../utils';
 
-export const query = queryService<Report>(({ userId }) => `users/${userId}/reports`, objectDictionaryToArray);
+import { Report } from './index';
 
-export const get = getService<Report>(({ userId, reportId }) => `users/${userId}/reports/${reportId}`);
+export const ReportServices = {
+  query: queryService<Report>(({ userId }) => `users/${userId}/reports`, objectDictionaryToArray),
+  get: getService<Report>(({ userId, reportId }) => `users/${userId}/reports/${reportId}`)
+};

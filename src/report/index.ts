@@ -1,8 +1,6 @@
-export * from './details';
-export * from './list';
-
-import * as Services from './services';
-export const ReportServices = Services;
+export * from './ReportDetails';
+export * from './ReportList';
+export * from './services';
 
 export interface Report {
   id: string;

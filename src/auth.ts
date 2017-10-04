@@ -42,3 +42,9 @@ export interface CurrentUser {
 }
 
 export const isLoggedIn = (currentUser: CurrentUser) => currentUser != null && currentUser.auth != null && currentUser.auth.uid != null;
+
+// Services
+export const AuthServices = {
+  login: (email: string, password: string) => firebase.auth().signInWithEmailAndPassword(email, password).catch(notify.error),
+  logout: () => firebase.auth().signOut().catch(notify.error)
+};

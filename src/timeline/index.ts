@@ -1,1 +1,2 @@
-export * from './timeline.component';
+export * from './Timeline';
+export * from './services';

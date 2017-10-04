@@ -1,7 +1,5 @@
-export * from './details';
-
-import * as Services from './services';
-export const ProfileServices = Services;
+export * from './ProfileDetails';
+export * from './services';
 
 import { ValueIndicator } from '../indicator';
 

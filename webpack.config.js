@@ -65,6 +65,9 @@ module.exports = ({ production } = {}) => ({
         ]
       }
     }),
+    new webpack.ProvidePlugin({
+      m: 'mithril'
+    }),
 
     // `contenthash` is specific to this plugin, we would typically use `chunkhash`
     new ExtractTextPlugin('styles.[contenthash].css'),

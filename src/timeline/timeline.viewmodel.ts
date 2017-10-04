@@ -1,9 +1,9 @@
-import { TimelineChartSeries } from './chart.viewmodel';
-import * as TimelineServices from './services';
-
 import { Indicator, IndicatorServices } from '../indicator';
 import * as notify from '../notify';
 import { store } from '../store';
+
+import { TimelineServices } from './index';
+import { TimelineChartSeries } from './TimelineChart';
 
 export interface Timeline {
   id: string;
